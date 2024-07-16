@@ -9,18 +9,24 @@ using UnityEngine.Events;
 public class DropBall:MonoBehaviour
 {
     private Rigidbody2D rb;
+
     [Header("If is a point value ball")]
     public bool isMatcher;
     public string colorTag;
     public int pointValue;
     public bool isMultiplier;
+
     [Header("Match checking information")]
     public bool isInGrid;
+    [Tooltip("Is attached to a gridnode")]
     public bool isClaimed;
+
+    [Tooltip("When true, attached to same color ball on the left")]
     public bool matchLeft = false;
     public bool matchRight = false;
     public bool matchTop = false;
     public bool matchBottom = false;
+
     [Header("Renderer info for point value balls")]
     public SpriteRenderer spriteRenderer;
     public List<Sprite> spritesList;
@@ -47,6 +53,8 @@ public class DropBall:MonoBehaviour
             }
         }
     }
+
+    /// <summary> Determine which sprite to use for the tiles of the same color to appear joined. </summary>
     public void MatchCheck()
     {
         if (matchLeft && matchRight && matchTop && matchBottom)
