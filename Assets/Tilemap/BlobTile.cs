@@ -23,10 +23,7 @@ public class BlobTile : RuleTile
 #endif
 
     [Tooltip("Color of all tiles created with this asset.")]
-    public Color Color;
-
-    [Tooltip("Value of this tile. Should match index of sprite used for BlobGrid.overlay tile.")]
-    public int overlayIndex = -1;
+    public Color Color = Color.red;
 
     public override void RefreshTile(Vector3Int position, ITilemap tilemap)
     {

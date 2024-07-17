@@ -308,8 +308,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f766473c71ba7284c93feba27812ea0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blobTile: {fileID: 11400000, guid: 87e9d0c07c7fadd44bd330c94e9d1736, type: 2}
-  overlayPrefab: {fileID: 782692077741829328, guid: 8b976f5aaf2c7fc439d2224dac040b93, type: 3}
+  player1: {fileID: 11400000, guid: 87e9d0c07c7fadd44bd330c94e9d1736, type: 2}
+  player2: {fileID: 11400000, guid: acf83b572d63d734c827f3ac36d04d13, type: 2}
   overlayTiles:
   - {fileID: 11400000, guid: 93b927165207f5b46ac435b653af7980, type: 2}
   - {fileID: 11400000, guid: 2ab0fd3e5d9b7644195378fe3ce8fc9f, type: 2}

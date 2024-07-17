@@ -11,7 +11,10 @@ public class BlobGrid : MonoBehaviour
     //private Vector2Int gridSize = new Vector2Int(10, 10);
 
     [SerializeField]
-    private RuleTile blobTile;
+    private BlobTile player1;
+
+    [SerializeField]
+    private BlobTile player2;
 
     private Tilemap tilemap
     {
@@ -26,27 +29,12 @@ public class BlobGrid : MonoBehaviour
     }
     private Tilemap _tilemap;
 
-    /// <summary> tilemap aligned to the same transform as the tilemap the blobtiles will belong to. overlays is used to add number overlays to blob tiles. </summary>
-
-    private Tilemap overlays
-    {
-        get
-        {
-            if (_overlays == null)
-            {
-                _overlays = GameObject.Instantiate<Tilemap>(overlayPrefab, tilemap.transform.position, tilemap.transform.rotation);
-                _overlays.transform.parent = tilemap.transform.parent;
-            }
-
-            return _overlays;
-        }
-    }
-    private Tilemap _overlays;
-
-    public Tilemap overlayPrefab;
+    private Dictionary<Vector2Int, int> tileValues = new Dictionary<Vector2Int, int>();
 
     [Tooltip("all sprites (assigned to tiles) available to be overlays.")]
     public Tile[] overlayTiles;
+
+    // Figuring out colliders should lead to joining colliders. joined colliders = finding all linked blob cells.
 
     /// <summary> tile neighbors are never outside these bounds </summary>
     //public RectInt Bounds
@@ -65,20 +53,34 @@ public class BlobGrid : MonoBehaviour
     //    return tilemap.CellToWorld(gridPosition);
     //}
 
-    public void Set(Vector3Int position, int overlayIndex = -1)
+    public void Set(TileBase player, Vector2Int position, int overlayIndex = -1)
     {
-        this.tilemap.SetTile(position, blobTile);
-        if (overlayIndex != -1)
+        // store overlay value
+        tileValues[position] = overlayIndex;
+        if (overlayIndex != -1) // add overlay tile
         {
-            overlays.SetTile(position, overlayTiles[overlayIndex]);
+            var overlay = (Vector3Int)position + Vector3Int.forward;
+            this.tilemap.SetTile(overlay, overlayTiles[overlayIndex]);
         }
+
+        // link cell with neighboring cells
+        this.tilemap.SetTile((Vector3Int)position, player);
     }
 
     private void Start()
     {
         // Test rule tiles render
-        Set(new Vector3Int(0, 0, 0), 0);
-        Set(new Vector3Int(1, 0, 0), 10);
-        Set(new Vector3Int(1, 1, 0));
+        Set(player1, new Vector2Int(0, 0), 0);
+        Set(player1, new Vector2Int(1, 1));
+        Set(player1, new Vector2Int(1, 0), 10);
+
+        // Test rule tiles render
+        Set(player2, new Vector2Int(0, 1), 1);
+        Set(player2, new Vector2Int(0, 2), 9);
+        Set(player2, new Vector2Int(0, 3), 4);
+
+        Debug.Log("tile1 value " + tileValues[new Vector2Int(0, 1)]);
+        Debug.Log("tile2 value " + tileValues[new Vector2Int(0, 2)]);
+        Debug.Log("tile3 value " + tileValues[new Vector2Int(0, 3)]);
     }
 }
