@@ -161,6 +161,30 @@ public class DropBall:MonoBehaviour
         displayValue.text = pointValue.ToString();
     }
 
+    public void LerpTo(Vector3 position)
+    {
+        StartCoroutine(LerpToCoroutine(position));
+    }
+
+    private IEnumerator LerpToCoroutine(Vector3 end)
+    {
+        Vector2 start = this.transform.position;
+        float time = 0;
+        float columnDuration = 0.2f;
+        while (time < columnDuration)
+        {
+            this.transform.position = Vector2.Lerp(start, end, time / columnDuration);
+            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.identity, time / columnDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        this.transform.position = end;
+        this.transform.rotation = Quaternion.identity;
+
+        Rigidbody2D rb = this.GetComponent<Rigidbody2D>();
+        rb.isKinematic = false;
+    }
+
     public virtual void PowerActivation()
     {
     }
