@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09b0a2f37373cb47a62db9a92c7af2c, type: 3}
+  m_Name: RuleTileBlobTest
+  m_EditorClassIdentifier: 
+  m_DefaultSprite: {fileID: 1825276395, guid: 95367cef1daec7b40875608753aa0ac3, type: 3}
+  m_DefaultGameObject: {fileID: 0}
+  m_DefaultColliderType: 1
+  m_TilingRules: []
+  overlayPrefab: {fileID: 0}
+  overlayTiles:
+  - {fileID: 11400000, guid: 93b927165207f5b46ac435b653af7980, type: 2}
+  - {fileID: 11400000, guid: 2ab0fd3e5d9b7644195378fe3ce8fc9f, type: 2}
+  - {fileID: 11400000, guid: c721e5c202628314f9222a558da7c12c, type: 2}
+  - {fileID: 11400000, guid: f721b08434dd1f24cb2861d999fcd0b1, type: 2}
+  - {fileID: 11400000, guid: eba7075374c8fe045bae7aa94ee16522, type: 2}
+  - {fileID: 11400000, guid: 8a9b03927dd98d24bbf0c5f0351e3701, type: 2}
+  - {fileID: 11400000, guid: 1109ba9e952ad7c419e0d30f0e66e241, type: 2}
+  - {fileID: 11400000, guid: 4070e2485c28ef145820057f186739a6, type: 2}
+  - {fileID: 11400000, guid: 41f517936ad3be340ac621a2c09525d8, type: 2}
+  - {fileID: 11400000, guid: b095cd01f804f9049b3459fba320ac11, type: 2}
+  - {fileID: 11400000, guid: c6caa7e7934b9f94080a039804ab76f5, type: 2}
+  overlayIndex: 0
