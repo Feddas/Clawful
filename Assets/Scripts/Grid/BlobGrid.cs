@@ -163,9 +163,14 @@ public class BlobGrid : MonoBehaviour
         initTilemap();
 
         // Test rule tiles render
-        //Set(whiteTile, new Vector2Int(0, 0), 0);
-        //Set(whiteTile, new Vector2Int(1, 1));
-        //Set(whiteTile, new Vector2Int(1, 0), 10);
+        Set(whiteTile, new Vector2Int(0, 0), 8);
+        Set(whiteTile, new Vector2Int(1, 0), 9);
+        Set(whiteTile, new Vector2Int(2, 0), 10);
+        Set(redTile, new Vector2Int(3, 0), 10);
+        Set(redTile, new Vector2Int(4, 0), 9);
+        Set(whiteTile, new Vector2Int(5, 0), 10);
+        Set(whiteTile, new Vector2Int(6, 0), 9);
+        Set(whiteTile, new Vector2Int(7, 0), 8);
         //Set(redTile, new Vector2Int(0, 1), 1);
         //Set(redTile, new Vector2Int(0, 2), 9);
         //Set(redTile, new Vector2Int(0, 3), 4);

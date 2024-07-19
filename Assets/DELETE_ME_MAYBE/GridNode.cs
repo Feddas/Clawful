@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+#if UNITY_EDITOR
 using UnityEditor.ShortcutManagement;
+#endif
 
 public class GridNode : MonoBehaviour
 {
