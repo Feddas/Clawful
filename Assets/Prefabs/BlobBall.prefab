@@ -338,7 +338,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BucketFloorName: BucketFloor
-  timeOfLastTrigger: 0
 --- !u!1 &7677919754218879122
 GameObject:
   m_ObjectHideFlags: 0

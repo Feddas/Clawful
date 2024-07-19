@@ -1,24 +1,39 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
+/// <summary> Manages the PuyoPuyo aspect of the game for a single player. </summary>
 [RequireComponent(typeof(Tilemap))]
 public class BlobGrid : MonoBehaviour
 {
-    //[SerializeField]
-    //private Vector2Int gridSize = new Vector2Int(10, 10);
+    /// <summary> Balls can't be activated when above this height </summary>
+    private const int gridHeight = 8;
 
+    [SerializeField]
+    private TextMeshProUGUI ScoreText;
+
+    [Tooltip("tilemap aligned to the same transform as the blobtiles tilemap. overlays are used to add text over tiles in thie tilemap.")]
+    [SerializeField]
+    private Tilemap overlay;
+
+    [Tooltip("all sprites (assigned to tiles) available to be overlays.")]
+    [SerializeField]
+    private Tile[] overlayTiles;
+
+    // TODO: setup BlobTile[] array
     [SerializeField]
     private BlobTile whiteTile;
 
     [SerializeField]
     private BlobTile redTile;
 
+    private int CurrentScore;
     private Vector2 cellCornerToCenter;
     private Dictionary<Vector2Int, BlobBall> blobRigidBodies = new Dictionary<Vector2Int, BlobBall>();
+    private ScoreBlob scoreBlob;
 
+    /// <summary> allows tilemap to be initialized before Start() </summary>
     private Tilemap tilemap
     {
         get
@@ -31,17 +46,43 @@ public class BlobGrid : MonoBehaviour
         }
     }
     private Tilemap _tilemap;
+
+    /// <summary> Called by EnterGrid.cs's OnBlobEntered UnityEvent </summary>
+    public void AddToGrid(BlobBall blobBall)
+    {
+        var newPosition = SnapToClosestCell(blobBall.transform.position);
+        newPosition += cellCornerToCenter; // account for cell pivot in lower left and ball pivot in center
+        blobBall.LerpTo(newPosition);
+
+        var floor = blobBall.GetComponentInChildren<BallFloorEvent>();
+        if (floor != null)
+        {
+            floor.GridName = this.name;
+            floor.MaxHeight = this.transform.position.y + gridHeight + 0.6f;
+            floor.OnHitFloor += Floor_OnHitFloor;  // TODO: -= when ball is cleared from scoring
+            floor.OnFloorMissing += Floor_OnFloorMissing;
+        }
+    }
+
     private void initTilemap()
     {
         _tilemap = GetComponent<Tilemap>();
         scoreBlob = new ScoreBlob(_tilemap);
         scoreBlob.OnRequestDestroyCell += DestroyCell;
+        scoreBlob.OnScored += AddScore;
         cellCornerToCenter = (Vector2)(tilemap.layoutGrid.cellSize / 2);
     }
 
     private void OnDestroy()
     {
         scoreBlob.OnRequestDestroyCell -= DestroyCell;
+        scoreBlob.OnScored -= AddScore;
+    }
+
+    private void AddScore(int scoreDelta)
+    {
+        CurrentScore += scoreDelta;
+        ScoreText.text = CurrentScore.ToString();
     }
 
     private void DestroyCell(Vector2Int position)
@@ -59,66 +100,6 @@ public class BlobGrid : MonoBehaviour
     {
         tilemap.SetTile((Vector3Int)position, null);
         overlay.SetTile((Vector3Int)position, null);
-    }
-
-    /// <summary> tilemap aligned to the same transform as the blobtiles tilemap. overlays are used to add number overlays to blob tiles. </summary>
-    [SerializeField]
-    private Tilemap overlay;
-    //{
-    //    get
-    //    {
-    //        if (_overlay == null)
-    //        {
-    //            _overlay = GetComponentInChildren<Tilemap>();
-    //            Debug.Log("overlay set to be " + _overlay.name);
-    //        }
-
-    //        return _overlay;
-    //    }
-    //}
-    //private Tilemap _overlay;
-
-    [Tooltip("all sprites (assigned to tiles) available to be overlays.")]
-    public Tile[] overlayTiles;
-
-    /// <summary> tile neighbors are never outside these bounds </summary>
-    //public RectInt Bounds
-    //{
-    //    get
-    //    {
-    //        Vector2Int position = new Vector2Int(-this.gridSize.x / 2, -this.gridSize.y / 2);
-    //        return new RectInt(position, this.gridSize);
-    //    }
-    //}
-
-    /// <summary> This function is called by UnityEvent on TopBucketGate </summary>
-    //public void AddToGrid(DropBall dropBall)
-    //{
-    //    var newPosition = SnapToClosestCell(dropBall.transform.position);
-    //    newPosition += cellCornerToCenter; // account for cell pivot in lower left and ball pivot in center
-    //    dropBall.LerpTo(newPosition);
-
-    //    var floor = dropBall.GetComponentInChildren<BallFloorEvent>();
-    //    if (floor != null)
-    //    {
-    //        floor.GridName = this.name;
-    //        floor.OnHitFloor += Floor_OnHitFloor;  // TODO: -= when ball is cleared from scoring
-    //    }
-    //}
-
-    public void AddToGrid(BlobBall blobBall)
-    {
-        var newPosition = SnapToClosestCell(blobBall.transform.position);
-        newPosition += cellCornerToCenter; // account for cell pivot in lower left and ball pivot in center
-        blobBall.LerpTo(newPosition);
-
-        var floor = blobBall.GetComponentInChildren<BallFloorEvent>();
-        if (floor != null)
-        {
-            floor.GridName = this.name;
-            floor.OnHitFloor += Floor_OnHitFloor;  // TODO: -= when ball is cleared from scoring
-            floor.OnFloorMissing += Floor_OnFloorMissing;
-        }
     }
 
     private void Floor_OnFloorMissing(BlobBall blobBall)
@@ -140,7 +121,7 @@ public class BlobGrid : MonoBehaviour
                 Destroy(dropBall.gameObject);
                 break;
             case BlobBall.AfterUsed.AddToGrid:
-                // deactivate no-tile based ball
+                // deactivate rigidbody until tile needs to fall
                 dropBall.SetState(isATile: true);
                 blobRigidBodies[targetTile] = dropBall;
 
@@ -157,6 +138,19 @@ public class BlobGrid : MonoBehaviour
         }
     }
 
+    private void Set(TileBase coloredTile, Vector2Int position, int pointValue = -1)
+    {
+        // show and store point value
+        if (pointValue != -1) // add overlay tile
+        {
+            overlay.SetTile((Vector3Int)position, overlayTiles[pointValue]);
+            scoreBlob[position] = (byte)pointValue;
+        }
+
+        // link cell with neighboring cells
+        this.tilemap.SetTile((Vector3Int)position, coloredTile);
+    }
+
     /// <returns> the world position center of the tile closest to the given<paramref name="worldPosition"/></returns>
     private Vector2 SnapToClosestCell(Vector2 worldPosition)
     {
@@ -164,48 +158,29 @@ public class BlobGrid : MonoBehaviour
         return tilemap.CellToWorld(gridPosition);
     }
 
-    private ScoreBlob scoreBlob;
-
-    public void Set(TileBase coloredTile, Vector2Int position, int overlayIndex = -1)
-    {
-        // show and store point value
-        if (overlayIndex != -1) // add overlay tile
-        {
-            overlay.SetTile((Vector3Int)position, overlayTiles[overlayIndex]);
-            scoreBlob[position] = (byte)overlayIndex;
-        }
-
-        // link cell with neighboring cells
-        this.tilemap.SetTile((Vector3Int)position, coloredTile);
-    }
-
     private void Start()
     {
         initTilemap();
 
         // Test rule tiles render
-        Set(whiteTile, new Vector2Int(0, 0), 0);
-        Set(whiteTile, new Vector2Int(1, 1));
-        Set(whiteTile, new Vector2Int(1, 0), 10);
-        Set(redTile, new Vector2Int(0, 1), 1);
-        Set(redTile, new Vector2Int(0, 2), 9);
-        Set(redTile, new Vector2Int(0, 3), 4);
-        Set(whiteTile, new Vector2Int(0, 4), 1);
-        Set(whiteTile, new Vector2Int(0, 5), 9);
-        Set(whiteTile, new Vector2Int(0, 6), 4);
-        Set(whiteTile, new Vector2Int(0, 7), 4);
+        //Set(whiteTile, new Vector2Int(0, 0), 0);
+        //Set(whiteTile, new Vector2Int(1, 1));
+        //Set(whiteTile, new Vector2Int(1, 0), 10);
+        //Set(redTile, new Vector2Int(0, 1), 1);
+        //Set(redTile, new Vector2Int(0, 2), 9);
+        //Set(redTile, new Vector2Int(0, 3), 4);
+        //Set(whiteTile, new Vector2Int(0, 4), 1);
+        //Set(whiteTile, new Vector2Int(0, 5), 9);
+        //Set(whiteTile, new Vector2Int(0, 6), 10);
+        //Set(whiteTile, new Vector2Int(0, 7), 4);
 
-        Set(redTile, new Vector2Int(2, 1), 8);
-        Set(redTile, new Vector2Int(2, 0), 9);
-        Set(redTile, new Vector2Int(3, 0), 6);
-        Set(redTile, new Vector2Int(4, 0), 4);
-        Set(whiteTile, new Vector2Int(5, 0));
-        Set(whiteTile, new Vector2Int(6, 0));
-        Set(whiteTile, new Vector2Int(7, 0));
-        Set(whiteTile, new Vector2Int(7, 1));
-
-        //Debug.Log("tile1 value " + tileValues[new Vector2Int(0, 1)]);
-        //Debug.Log("tile2 value " + tileValues[new Vector2Int(0, 2)]);
-        //Debug.Log("tile3 value " + tileValues[new Vector2Int(0, 3)]);
+        //Set(redTile, new Vector2Int(2, 1), 8);
+        //Set(redTile, new Vector2Int(2, 0), 9);
+        //Set(redTile, new Vector2Int(3, 0), 6);
+        //Set(redTile, new Vector2Int(4, 0), 10);
+        //Set(whiteTile, new Vector2Int(5, 0));
+        //Set(whiteTile, new Vector2Int(6, 0));
+        //Set(whiteTile, new Vector2Int(7, 0));
+        //Set(whiteTile, new Vector2Int(7, 1));
     }
 }

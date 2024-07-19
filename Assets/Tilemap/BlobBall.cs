@@ -1,12 +1,34 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-[RequireComponent(typeof(Rigidbody2D))]
+/// <summary> Individual ball that can be claw grabbed and thrown into the grid </summary>
 public class BlobBall : MonoBehaviour
 {
+    /// <summary> Scores to be evaluated by ScoreBlob.cs's ScoreTilesLinkedTo switch statement </summary>
+    public enum PointsEnum
+    {
+        Zero = 0,
+        One,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six,
+        Seven,
+        Eight,
+        Nine,
+        MultiplierX2 = 10,
+    }
+
+    /// <summary> What should happen to this ball after it attaches to the grid. </summary>
+    public enum AfterUsed
+    {
+        Destroy,
+        AddToGrid,
+    }
+
+    /// <summary> References to child gameobjects specific to BlobBall </summary>
     [Serializable]
     public class HasParts
     {
@@ -17,19 +39,9 @@ public class BlobBall : MonoBehaviour
         public Sprite[] TextSprites;
     }
 
-    public enum PointsEnum
-    {
-        Zero = 0,
-        One,
-        Two,
-        Three,
-        Four,
-        Five,
-        MultiplierX2 = 10,
-    }
-
     [Tooltip("Reference to child gameobjects for easy access in the script")]
-    public HasParts subPart;
+    [SerializeField]
+    private HasParts subPart;
 
     [Tooltip("Balls will group when their color exactly matches one another")]
     public Color Color = Color.white;
@@ -38,10 +50,11 @@ public class BlobBall : MonoBehaviour
     public PointsEnum PointValue;
 
     [Tooltip("Size of ball when it can be claw grabbed or when its floating in the water. 100% size is used while in a blob grid.")]
+    [SerializeField]
     [Range(.1f, 1f)]
-    public float GrabSize = 0.6f;
+    private float GrabSize = 0.6f;
 
-    void OnValidate()
+    public void OnValidate()
     {
         subPart.Circle.color = this.Color;
 
@@ -60,6 +73,26 @@ public class BlobBall : MonoBehaviour
         this.transform.localScale = Vector3.one * GrabSize;
     }
 
+    /// <summary> What should happen to this ball after it attaches to the grid. </summary>
+    public virtual AfterUsed PowerActivation(Vector2Int at, ScoreBlob scoring)
+    {
+        return AfterUsed.AddToGrid;
+    }
+
+    /// <summary> Toggle components used while the ball is moving that conflict with the ball when it is a tile. </summary>
+    public void SetState(bool isATile)
+    {
+        this.subPart.rb.bodyType = isATile ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        if (isATile)
+        {
+            this.subPart.rb.velocity = Vector2.zero;
+            this.subPart.rb.angularVelocity = 0;
+        }
+        this.subPart.Circle.transform.parent.gameObject.SetActive(false == isATile); // SetActive of "Visual"
+        this.subPart.circleCollider.enabled = (false == isATile);
+    }
+
+    /// <summary> Moves this ball to <paramref name="position"/> over <paramref name="columnDuration"/> </summary>
     public void LerpTo(Vector3 position)
     {
         StartCoroutine(LerpToCoroutine(position));
@@ -81,29 +114,5 @@ public class BlobBall : MonoBehaviour
         this.transform.rotation = Quaternion.identity;
 
         this.subPart.rb.bodyType = RigidbodyType2D.Dynamic;
-    }
-
-    /// <summary> Toggle components used while the ball is moving that conflict with the ball when it is a tile. </summary>
-    public void SetState(bool isATile)
-    {
-        this.subPart.rb.bodyType = isATile ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
-        if (isATile)
-        {
-            this.subPart.rb.velocity = Vector2.zero;
-            this.subPart.rb.angularVelocity = 0;
-        }
-        this.subPart.Circle.transform.parent.gameObject.SetActive(false == isATile); // SetActive of "Visual"
-        this.subPart.circleCollider.enabled = (false == isATile);
-    }
-
-    public enum AfterUsed
-    {
-        Destroy,
-        AddToGrid,
-    }
-
-    public virtual AfterUsed PowerActivation(Vector2Int at, ScoreBlob scoring)
-    {
-        return AfterUsed.AddToGrid;
     }
 }
