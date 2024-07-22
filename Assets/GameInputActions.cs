@@ -29,7 +29,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""4490d6ea-39e3-4ae6-9380-30e587bb711c"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -62,22 +62,13 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Jump"",
-                    ""type"": ""Button"",
-                    ""id"": ""1500d730-198d-4c04-8e62-29eb29e94717"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""Arrows"",
                     ""id"": ""3c66cdc4-550b-4176-a405-256e06d88ef9"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -143,7 +134,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""de105a1a-e507-459e-8972-09dddb6c5666"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -154,7 +145,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""bd064782-83fd-4bb8-9293-9a46a1a52bcc"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -165,7 +156,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""dc45eb8c-9ad5-4646-8d3b-3dc96408d97e"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -176,7 +167,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""9e27e842-2083-4d56-94b0-18ae7f100b00"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -192,17 +183,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ActivateClaw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3a6217d6-3f12-451b-8998-bc5e7e2b1fee"",
-                    ""path"": ""<Keyboard>/rightShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -441,7 +421,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         m_PlayerOne_Swing = m_PlayerOne.FindAction("Swing", throwIfNotFound: true);
         m_PlayerOne_ActivateClaw = m_PlayerOne.FindAction("ActivateClaw", throwIfNotFound: true);
         m_PlayerOne_ChargeClaw = m_PlayerOne.FindAction("ChargeClaw", throwIfNotFound: true);
-        m_PlayerOne_Jump = m_PlayerOne.FindAction("Jump", throwIfNotFound: true);
         // PlayerTwo
         m_PlayerTwo = asset.FindActionMap("PlayerTwo", throwIfNotFound: true);
         m_PlayerTwo_Move = m_PlayerTwo.FindAction("Move", throwIfNotFound: true);
@@ -511,7 +490,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerOne_Swing;
     private readonly InputAction m_PlayerOne_ActivateClaw;
     private readonly InputAction m_PlayerOne_ChargeClaw;
-    private readonly InputAction m_PlayerOne_Jump;
     public struct PlayerOneActions
     {
         private @GameInputActions m_Wrapper;
@@ -520,7 +498,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         public InputAction @Swing => m_Wrapper.m_PlayerOne_Swing;
         public InputAction @ActivateClaw => m_Wrapper.m_PlayerOne_ActivateClaw;
         public InputAction @ChargeClaw => m_Wrapper.m_PlayerOne_ChargeClaw;
-        public InputAction @Jump => m_Wrapper.m_PlayerOne_Jump;
         public InputActionMap Get() { return m_Wrapper.m_PlayerOne; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -542,9 +519,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @ChargeClaw.started += instance.OnChargeClaw;
             @ChargeClaw.performed += instance.OnChargeClaw;
             @ChargeClaw.canceled += instance.OnChargeClaw;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
         }
 
         private void UnregisterCallbacks(IPlayerOneActions instance)
@@ -561,9 +535,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @ChargeClaw.started -= instance.OnChargeClaw;
             @ChargeClaw.performed -= instance.OnChargeClaw;
             @ChargeClaw.canceled -= instance.OnChargeClaw;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
         }
 
         public void RemoveCallbacks(IPlayerOneActions instance)
@@ -641,7 +612,6 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         void OnSwing(InputAction.CallbackContext context);
         void OnActivateClaw(InputAction.CallbackContext context);
         void OnChargeClaw(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
     }
     public interface IPlayerTwoActions
     {

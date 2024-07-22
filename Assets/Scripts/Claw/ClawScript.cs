@@ -21,10 +21,9 @@ public class ClawScript : MonoBehaviour
 {
     public bool isPlayerOne;
     public float speed = 2f;
-    public float acceleration = 10f;
-    //public float jumpForce = 15f;
 
     public DistanceJoint2D dj2D;
+    public HingeJoint2D clawHinge;
     public Rigidbody2D djRB;
     public float distanceChangeRate = 0.1f;
     public float minDistance = 0.5f; // Minimum limit for the distance
@@ -36,7 +35,7 @@ public class ClawScript : MonoBehaviour
     private DistanceJoint2D jointOne;
     private  DistanceJoint2D jointTwo;
 
-    private Vector2 moveInput;
+    public Vector2 moveInput;
     private Rigidbody2D rb;
 
     private InputAction moveAction;
@@ -76,6 +75,7 @@ public class ClawScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         djRB = dj2D.GetComponent<Rigidbody2D>();
+        clawHinge = dj2D.GetComponent<HingeJoint2D>();
         minDistance = dj2D.distance;
         maxDistance = dj2D.distance + distanceOffset;
 
@@ -177,17 +177,8 @@ public class ClawScript : MonoBehaviour
 
     private void Move()
     {
-        Vector2 targetVelocity = moveInput * speed;
-        Vector2 velocityChange = targetVelocity - rb.velocity;
-        Vector2 accelerationVector = velocityChange.normalized * acceleration;
-
-        // Limit the acceleration to not exceed the required change in velocity
-        if (accelerationVector.magnitude > velocityChange.magnitude)
-        {
-            accelerationVector = velocityChange;
-        }
-
-        rb.AddForce(accelerationVector * rb.mass, ForceMode2D.Force);
+        Vector2 targetVelocity = new Vector2 (moveInput.x * speed, 0);
+        rb.AddForce(targetVelocity * rb.mass, ForceMode2D.Force);
     }
 
     private void AdjustDistance()
@@ -225,12 +216,14 @@ public class ClawScript : MonoBehaviour
             if (moveInput.y > 0)
             {
                 dj2D.distance = Mathf.Clamp(dj2D.distance - adjustedRate, minDistance, maxDistance);
+                clawHinge.connectedAnchor = new Vector2(0, -dj2D.distance);
                 jointOne.distance = dj2D.distance / 2;
                 jointTwo.distance = dj2D.distance / 2;
             }
             else if (moveInput.y < 0)
             {
                 dj2D.distance = Mathf.Clamp(dj2D.distance + adjustedRate, minDistance, maxDistance);
+                clawHinge.connectedAnchor = new Vector2(0, -dj2D.distance);
                 jointOne.distance = dj2D.distance / 2;
                 jointTwo.distance = dj2D.distance / 2;
             }
