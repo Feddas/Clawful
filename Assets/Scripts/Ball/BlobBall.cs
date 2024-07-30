@@ -37,7 +37,10 @@ public class BlobBall : MonoBehaviour
         public Rigidbody2D rb;
         public CircleCollider2D circleCollider;
         public Sprite[] TextSprites;
+        public BallFloorEvent FloorSensor;
     }
+
+    public BallFloorEvent FloorSensor { get { return this.subPart.FloorSensor; } }
 
     [Tooltip("Reference to child gameobjects for easy access in the script")]
     [SerializeField]
@@ -96,6 +99,21 @@ public class BlobBall : MonoBehaviour
     public void LerpTo(Vector3 position)
     {
         StartCoroutine(LerpToCoroutine(position));
+    }
+
+    /// <summary> Prepares if a ball moved at <paramref name="position"/> would cause this ball to fall. </summary>
+    public void OtherBallRemoved(Vector2 position)
+    {
+        // note: don't seem to need to handle +/-0.1f in x-value error. AKA, don't yet need IsInSameColumn(position)
+        if (position.x != this.transform.position.x || position.y > this.transform.position.y)
+        {
+            return; // ball is in a different column or above this ball
+        }
+
+        this.FloorSensor.FallsUntil -= 1;
+
+        Debug.Log($"{this.name} at {this.transform.position} is falling to {this.FloorSensor.FallsUntil.ToString("F1")} due to ball removed at {position}");
+        this.FloorSensor.SetNoFloor(this);
     }
 
     private IEnumerator LerpToCoroutine(Vector3 end)

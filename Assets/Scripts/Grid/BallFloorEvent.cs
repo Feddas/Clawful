@@ -19,11 +19,22 @@ public class BallFloorEvent : MonoBehaviour
     /// <summary> Max Height a ball can have to interact with this grid. </summary>
     public float MaxHeight { get; set; } = int.MinValue;
 
+    /// <summary> Rrepresents when the ball is allowed to check if it should transition from a rigidbody into a tilemap tile. </summary>
+    public float FallsUntil { get; set; } = float.MaxValue;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         bool isTarget = other.name == BucketFloorName || other.name == GridName;
-        if (isTarget && this.transform.position.y < MaxHeight)
+        if (isTarget
+            && this.transform.position.y < MaxHeight
+            && this.transform.position.y < (FallsUntil + .1))
         {
+            // initialize how much the ball will fall if a tile below it is removed
+            if (FallsUntil == float.MaxValue)
+            {
+                FallsUntil = this.transform.position.y;
+            }
+
             if (OnHitFloor != null)
             {
                 OnHitFloor.Invoke(this.transform.parent.GetComponent<BlobBall>());
@@ -31,14 +42,11 @@ public class BallFloorEvent : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public void SetNoFloor(BlobBall ball)
     {
-        if (other.name == GridName)
+        if (OnFloorMissing != null)
         {
-            if (OnFloorMissing != null)
-            {
-                OnFloorMissing.Invoke(this.transform.parent.GetComponent<BlobBall>());
-            }
+            OnFloorMissing.Invoke(ball);
         }
     }
 }

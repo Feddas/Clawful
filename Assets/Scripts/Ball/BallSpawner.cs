@@ -34,6 +34,7 @@ public class BallSpawner : MonoBehaviour
     IEnumerator Start()
     {
         Random.InitState(42); // ensures levels are always spawned the same way. This makes testing easier.
+        var pointValues = (BlobBall.PointsEnum[])System.Enum.GetValues(typeof(BlobBall.PointsEnum));
 
         float nextPrefab;
         Vector3 spawnPoint;
@@ -54,7 +55,8 @@ public class BallSpawner : MonoBehaviour
             {
                 var nextBall = Instantiate(BlobBallPrefab, spawnPoint, Quaternion.identity, SpawnParent);
                 nextBall.Color = Colors[Random.Range(0, Colors.Length)];
-                nextBall.PointValue = (BlobBall.PointsEnum)Random.Range(0, 11);
+                nextBall.PointValue = pointValues[Random.Range(0, pointValues.Length)];
+                nextBall.name = $"ball{nextBall.Color.b}-{spawnPoint.x:F1}-{nextBall.PointValue}"; // ball color - ball column - ball value
                 nextBall.OnValidate();
             }
         }

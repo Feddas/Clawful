@@ -182,6 +182,7 @@ MonoBehaviour:
     - {fileID: -218478408, guid: 95367cef1daec7b40875608753aa0ac3, type: 3}
     - {fileID: -1184281739, guid: 95367cef1daec7b40875608753aa0ac3, type: 3}
     - {fileID: 1129025700, guid: 95367cef1daec7b40875608753aa0ac3, type: 3}
+    FloorSensor: {fileID: 7266967865463895226}
   Color: {r: 1, g: 1, b: 1, a: 1}
   PointValue: 0
   GrabSize: 0.6

@@ -20,3 +20,15 @@ To add a new tile color go to "Create/2D/Clawful Tile". It should be setup smili
 # Balls
 
 Balls are initiated by `BallSpawner.cs`. The player uses the claw to help transition balls to `EnterGrid.cs`, which gates when balls will be assigned to a players grid. Once in a grid, balls can be scored with `BombBall.cs`. BombBalls inherit BlobBalls.
+
+## back and forth
+Balls are either in a rigid body state or a tilemap state.
+- rigidbody - the ball interacts with physics. The rigidbody gameobject exists, but is deactivated, while the ball is a tilemap.
+- tilemap - the ball visually joins adjacent (vertially and horizontally) balls of the same color.
+
+To a tilemap - Balls enter the grid as rigidbodies. They remain rigidbodies until their Y-position is below their `FallsUntil + .1` value. While a rigidbody, they have an active trigger collider below them. When this trigger enters a tilemap tile, or the edge of the grid, the ball is converted to a tilemap and FallsUntil is updated only to the rigidbodies current y-value only if FallsUntil's value is set to float.maxvalue (To ensure it doesn't override the value set by tile deleted event).
+
+To a rigidbody - when any tile is deleted, all tiles recieve the `tile removed` event containing an x,y payload. if this tile is in the same x-column and above the y-row, it's converted to a rigidbody (if it isn't already) and `FallsUntil` is changed by -1.
+
+`FallsUntil` - This value represents when the ball is allowed to check if it should transition from a rigidbody into a tilemap tile. This value is modified when a tile below it is removed from the grid.
+

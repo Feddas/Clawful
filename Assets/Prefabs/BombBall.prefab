@@ -131,6 +131,7 @@ MonoBehaviour:
     rb: {fileID: 2235403334103003395}
     circleCollider: {fileID: 2870621204859040655}
     TextSprites: []
+    FloorSensor: {fileID: 8701650814497480295}
   Color: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
   PointValue: 0
   GrabSize: 0.6
@@ -139,3 +140,14 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8951866007497319049, guid: 58864abb9ee1f6f4aa3f0bb00e506ed2, type: 3}
   m_PrefabInstance: {fileID: 2025227345848904413}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8701650814497480295 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7266967865463895226, guid: 58864abb9ee1f6f4aa3f0bb00e506ed2, type: 3}
+  m_PrefabInstance: {fileID: 2025227345848904413}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 262f9cfee90d5f44e8e7cacd15d65395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
