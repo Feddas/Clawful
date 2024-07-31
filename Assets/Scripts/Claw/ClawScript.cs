@@ -4,26 +4,13 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[System.Serializable]
-public class ClawData
-{
-    public Transform claw;
-    public Vector3 startP;
-    public Quaternion closedRot;
-    public Quaternion openedRot;
-    //used with hinge joints.
-    //public HingeJoint2D rightClaw;
-    //public Vector3 rightP;
-    //public float rightClose;
-    //public float rightOpen;
-}
 public class ClawScript : MonoBehaviour
 {
     public bool isPlayerOne;
     public float speed = 2f;
+    public float yPosition;
 
     public DistanceJoint2D dj2D;
-    public HingeJoint2D clawHinge;
     public Rigidbody2D djRB;
     public float distanceChangeRate = 0.1f;
     public float minDistance = 0.5f; // Minimum limit for the distance
@@ -59,30 +46,15 @@ public class ClawScript : MonoBehaviour
     public float maxChargeDistance = 3f;
 
     [Header ("Claw Reference")]
-    public List<ClawData> claws;
-    private float time = 0;
-    public float closeDuration;
-    public float openDuration;
-    public HingeJoint2D clawLeft;
-    public HingeJoint2D clawRight;
-    public float clawStrength; //public so maybe something can weaken it?
-
-    private bool canFunction = true;
-    private bool clawOpen = true;
-    //public bool isGrounded = true;
+    public List<ClawArmScript> claws;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         djRB = dj2D.GetComponent<Rigidbody2D>();
-        clawHinge = dj2D.GetComponent<HingeJoint2D>();
+        yPosition = transform.position.y;
         minDistance = dj2D.distance;
         maxDistance = dj2D.distance + distanceOffset;
-
-        foreach (ClawData c in claws)
-        {
-            c.openedRot = c.claw.rotation;
-        }
 
         DistanceJoint2D[] joints = middleRope.GetComponents<DistanceJoint2D>();
         if (joints.Length >= 2)
@@ -94,13 +66,6 @@ public class ClawScript : MonoBehaviour
         {
             Debug.LogError("Not Enough Joints on Rope");
         }
-
-        JointMotor2D left = clawLeft.motor;
-        left.motorSpeed = clawStrength;
-        clawLeft.motor = left;
-        JointMotor2D right = clawRight.motor;
-        right.motorSpeed = -clawStrength;
-        clawRight.motor = right;
     }
 
     private void OnEnable()
@@ -216,14 +181,13 @@ public class ClawScript : MonoBehaviour
             if (moveInput.y > 0)
             {
                 dj2D.distance = Mathf.Clamp(dj2D.distance - adjustedRate, minDistance, maxDistance);
-                clawHinge.connectedAnchor = new Vector2(0, -dj2D.distance);
+                transform.position = new Vector3(transform.position.x, yPosition, transform.position.z);
                 jointOne.distance = dj2D.distance / 2;
                 jointTwo.distance = dj2D.distance / 2;
             }
             else if (moveInput.y < 0)
             {
                 dj2D.distance = Mathf.Clamp(dj2D.distance + adjustedRate, minDistance, maxDistance);
-                clawHinge.connectedAnchor = new Vector2(0, -dj2D.distance);
                 jointOne.distance = dj2D.distance / 2;
                 jointTwo.distance = dj2D.distance / 2;
             }
@@ -264,120 +228,11 @@ public class ClawScript : MonoBehaviour
         jointTwo.distance = dj2D.distance / 2;
     }
 
-    //IEnumerator LaunchClaw()
-    //{
-    //    isCharging = false;
-    //    dj2D.distance = Mathf.Clamp(chargeDistance, minDistance, maxDistance);
-    //    yield return new WaitForSeconds(0.5f);
-    //    // Calculate direction from DistanceJoint2D target to the claw
-    //    Vector2 direction = (dj2D.connectedAnchor - rb.position).normalized;
-    //    djRB.AddForce(direction * chargeForce, ForceMode2D.Impulse);
-    //    chargeForce = 0;
-    //    chargeDistance = minDistance;
-    //}
-
     public void ActivateClaw()
     {
-        if (canFunction)
+        foreach (ClawArmScript claw in claws)
         {
-            if (!clawOpen)
-            {
-                print("open");
-                time = 0;
-                //canFunction = false;
-                JointMotor2D left = clawLeft.motor;
-                left.motorSpeed = clawStrength;
-                clawLeft.motor = left;
-                JointMotor2D right = clawRight.motor;
-                right.motorSpeed = -clawStrength;
-                clawRight.motor = right;
-                clawOpen = true;
-                //StartCoroutine(OpenClaw());
-                //OpenC();
-            }
-            else
-            {
-                print("close");
-                time = 0;
-                //canFunction = false;
-                JointMotor2D left = clawLeft.motor;
-                left.motorSpeed = -clawStrength;
-                clawLeft.motor = left;
-                JointMotor2D right = clawRight.motor;
-                right.motorSpeed = clawStrength;
-                clawRight.motor = right;
-                clawOpen = false;
-                //StartCoroutine(CloseClaw());
-                //CloseC();
-            }
+            claw.ClawControl();
         }
-    }
-
-    IEnumerator CloseClaw()
-    {
-
-        while (time < closeDuration)
-        {
-            time += Time.deltaTime;
-            float t = time / closeDuration;
-
-            for (int i = 0; i < claws.Count; i++)
-            {
-                ClawData clawData = claws[i];
-                Quaternion initialRot = claws[i].claw.localRotation;
-                Quaternion closedRot = Quaternion.identity;
-
-                // Interpolate rotation
-                clawData.claw.localRotation = Quaternion.Lerp(initialRot, closedRot, t);
-            }
-
-            yield return null;
-        }
-
-        // Ensure all claws are exactly at the closed rotation
-        foreach (ClawData clawData in claws)
-        {
-            clawData.claw.localRotation = Quaternion.identity;
-        }
-
-        clawOpen = false;
-        canFunction = true;
-    }
-
-    IEnumerator OpenClaw()
-    {
-        // Store initial rotations
-        List<Quaternion> initialRotations = new List<Quaternion>();
-        foreach (ClawData clawData in claws)
-        {
-            initialRotations.Add(clawData.claw.localRotation);
-        }
-
-        while (time < openDuration)
-        {
-            time += Time.deltaTime;
-            float t = time / openDuration;
-
-            for (int i = 0; i < claws.Count; i++)
-            {
-                ClawData clawData = claws[i];
-                Quaternion initialRot = initialRotations[i];
-                Quaternion openRot = clawData.openedRot;
-
-                // Interpolate rotation
-                clawData.claw.localRotation = Quaternion.Lerp(initialRot, openRot, t);
-            }
-
-            yield return null;
-        }
-
-        // Ensure all claws are exactly at the closed rotation
-        foreach (ClawData clawData in claws)
-        {
-            clawData.claw.localRotation = clawData.openedRot;
-        }
-
-        clawOpen = true;
-        canFunction = true;
     }
 }
