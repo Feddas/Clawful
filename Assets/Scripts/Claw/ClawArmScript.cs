@@ -55,7 +55,7 @@ public class ClawArmScript : MonoBehaviour
 
             yield return null;
         }
-        transform.rotation = closedRot;
+        transform.localRotation = closedRot;
         clawOpen = false;
         canFunction = true;
     }
@@ -72,7 +72,7 @@ public class ClawArmScript : MonoBehaviour
 
             yield return null;
         }
-        transform.rotation = openRot;
+        transform.localRotation = openRot;
         clawOpen = true;
         canFunction = true;
     }
