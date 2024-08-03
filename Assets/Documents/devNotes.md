@@ -32,3 +32,6 @@ To a rigidbody - when any tile is deleted, all tiles recieve the `tile removed` 
 
 `FallsUntil` - This value represents when the ball is allowed to check if it should transition from a rigidbody into a tilemap tile. This value is modified when a tile below it is removed from the grid.
 
+# Dev Ops
+
+CI (Continous integration) definitions are in [.github/workflows](../../.github/workflows). These files tell GitHub to create builds ([as artifacts to the bottom of actions](https://github.com/Feddas/Clawful/actions/runs/10231069973)) and to deploy the WebGL build to GitHub pages. For details, [this link explains how CI was enabled](https://game.ci/docs/github/activation/#personal-license).

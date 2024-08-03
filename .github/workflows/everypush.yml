@@ -1,0 +1,56 @@
+name: Build project every push
+
+on: [push]
+
+permissions:
+  # gh-pages workflow needs write access https://github.com/JamesIves/github-pages-deploy-action/issues/1110
+  contents: write
+
+jobs:
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          - WebGL # WebGL build requires being run on a web server
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          versioning: Semantic
+      - run: echo 'built Clawful ${{ matrix.targetPlatform }} v ${{ steps.myBuildStep.outputs.buildVersion }}'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+      - if: matrix.targetPlatform == 'WebGL'
+        name: Deploy to GitHub Pages
+         # You may pin to the exact commit or the version.
+         # uses: JamesIves/github-pages-deploy-action@94f3c658273cf92fb48ef99e5fbc02bd2dc642b2 / youtu.be/1npWH0rPOnI
+        uses: JamesIves/github-pages-deploy-action@v4.6.3
+        with:
+           # This is the branch you wish to deploy to, for example gh-pages or docs. # optional, default is gh-pages
+          branch: gh-pages
+           # The folder in your repository that you want to deploy. If your build script compiles into a directory named build you would put it here. Folder paths cannot have a leading / or ./. If you wish to deploy the root directory you can place a . here.
+          folder: build/${{ matrix.targetPlatform }}/WebGL
+           # If you need to use clean but you would like to preserve certain files or folders you can use this option. This should contain each pattern as a single line in a multiline string.
+          clean-exclude: readme.md
