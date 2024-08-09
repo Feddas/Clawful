@@ -34,4 +34,11 @@ To a rigidbody - when any tile is deleted, all tiles recieve the `tile removed` 
 
 # Dev Ops
 
-CI (Continous integration) definitions are in [.github/workflows](../../.github/workflows). These files tell GitHub to create builds ([as artifacts to the bottom of actions](https://github.com/Feddas/Clawful/actions/runs/10231069973)) and to deploy the WebGL build to GitHub pages. For details, [this link explains how CI was enabled](https://game.ci/docs/github/activation/#personal-license).
+CI (Continous Integration) definitions are in [.github/workflows](../../.github/workflows). These 
+files tell GitHub to create builds ([as artifacts to the bottom of 
+actions](https://github.com/Feddas/Clawful/actions/runs/10231069973)) and to deploy the WebGL build 
+to GitHub pages. For details, [this link explains how CI was 
+enabled](https://game.ci/docs/github/activation/#personal-license).
+
+- [everypush.yml](../../.github/workflows/everypush.yml) - Builds Win, Linux, & WebGL every push to the repo. If pushing to main, also deploys WebGL website.
+- [manual.yml](../../.github/workflows/manual.yml) - Runs similiar flow as everypush,yml. But any branch. Probably (not tested) uses whatever is the last commit to deploy WebGL website.
