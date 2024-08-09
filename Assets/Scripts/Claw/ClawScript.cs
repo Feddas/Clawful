@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class ClawScript : MonoBehaviour
 {
     public bool isPlayerOne;
+    public bool canFunction = false;
     public float speed = 2f;
     public float yPosition;
 
@@ -27,7 +28,6 @@ public class ClawScript : MonoBehaviour
 
     private InputAction moveAction;
     private InputAction clawAction;
-    //private InputAction jumpAction;
 
     //double tap dash inputs
     private float lastTapTimeLeft;
@@ -91,8 +91,11 @@ public class ClawScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        Move();
-        AdjustDistance();
+        if (canFunction)
+        {
+            Move();
+            AdjustDistance();
+        }
     }
 
     private void Update()
@@ -108,7 +111,10 @@ public class ClawScript : MonoBehaviour
 
     private void OnActivateClaw(InputAction.CallbackContext context)
     {
-        ActivateClaw();
+        if (canFunction)
+        {
+            ActivateClaw();
+        }
     }
 
     private void DetectDoubleTap(Vector2 input)
