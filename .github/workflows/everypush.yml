@@ -42,7 +42,8 @@ jobs:
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-      - if: matrix.targetPlatform == 'WebGL'
+         # Deploy WebGL if main branch was pushed.
+      - if: ${{ matrix.targetPlatform == 'WebGL' && github.ref == 'refs/heads/main' }}
         name: Deploy to GitHub Pages
          # You may pin to the exact commit or the version.
          # uses: JamesIves/github-pages-deploy-action@94f3c658273cf92fb48ef99e5fbc02bd2dc642b2 / youtu.be/1npWH0rPOnI
