@@ -1199,7 +1199,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8426294472333984571}
   m_Layer: 0
-  m_Name: ClawRig_v2
+  m_Name: ClawRig_base 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

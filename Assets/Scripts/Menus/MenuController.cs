@@ -13,10 +13,15 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     public GameObject startMenu;
+    public GameObject selectMenu;
     public GameObject characterMenu;
-    public GameObject characterMenu2;
+    private bool hasPlayerOne;
     public EventSystem eventSystem;
     public GameManager gm;
+    public PlayerInputManager pm;
+
+    public GameObject playerOneCharacter;
+    public GameObject playerTwoCharacter;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,13 +34,29 @@ public class MenuController : MonoBehaviour
         
     }
 
+    public void PlayerJoin(CharacterSelector cs)
+    {
+        if (!hasPlayerOne)
+            hasPlayerOne = true;
+        else
+        {
+            cs.BecomPlayerTwo();
+        }
+    }
+
+    public void SelectCharacter(CharacterSelector c, GameObject character)
+    {
+        if (c.isPlayerOne)
+            playerOneCharacter = character;
+        else
+            playerTwoCharacter = character;
+    }
+
     public void ChangeToCharacterSelect()
     {
         startMenu.SetActive(false);
-        GameObject newChar = Instantiate(characterMenu);
-        GameObject newChar2 = Instantiate(characterMenu2);
-
-        //eventSystem.firstSelectedGameObject = characterMenu.transform.Find("1").gameObject;
-        //characterMenu.transform.Find("1").GetComponent<Button>().Select();
+        selectMenu.SetActive(true);
+        pm.joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+        pm.playerPrefab = characterMenu;
     }
 }

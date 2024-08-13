@@ -1,5 +1,5 @@
 {
-    "name": "DefaultInputActions",
+    "name": "PlayerMenuControl",
     "maps": [
         {
             "name": "Player",
@@ -162,6 +162,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "15a67e16-36ef-4f1a-b84c-061e60299579",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
