@@ -133,6 +133,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8857219792468610122}
+        m_TargetAssemblyTypeName: CharacterSelector, Assembly-CSharp
+        m_MethodName: DisplayCharacter
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5271442181712696601, guid: 42bbde2c92f75944db26ac9cac5c9c57, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &272358540681388724
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +668,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8857219792468610122}
+        m_TargetAssemblyTypeName: CharacterSelector, Assembly-CSharp
+        m_MethodName: DisplayCharacter
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5271442181712696601, guid: de366b2f3c1d53247a1a1280622ea98d, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4940726073854891209
 GameObject:
   m_ObjectHideFlags: 0
@@ -783,6 +807,18 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 5271442181712696601, guid: 1d9e22ed87901a14abf9dbd598ec999f, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8857219792468610122}
+        m_TargetAssemblyTypeName: CharacterSelector, Assembly-CSharp
+        m_MethodName: DisplayCharacter
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5271442181712696601, guid: 970e4fa8d00dedd45a1f9a8133563bc2, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1498,6 +1534,18 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 5271442181712696601, guid: 06f10de8494dac04d88f62ca15c6efa7, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8857219792468610122}
+        m_TargetAssemblyTypeName: CharacterSelector, Assembly-CSharp
+        m_MethodName: DisplayCharacter
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5271442181712696601, guid: 580ac7bc7b15a5545b8450642a21e7eb, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0

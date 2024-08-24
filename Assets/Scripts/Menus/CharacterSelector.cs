@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class CharacterSelector : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class CharacterSelector : MonoBehaviour
     public Transform modelLocTwo;
     public GameObject currentModel;
 
+    private InputAction cancelAction;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,10 +24,23 @@ public class CharacterSelector : MonoBehaviour
         mc.PlayerJoin(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        var playerInput = GetComponent<PlayerInput>();
+
+        cancelAction = playerInput.actions["Cancel"];
+        cancelAction.performed += OnCancel;
+    }
+
+    private void OnDisable()
+    {
+        cancelAction.performed -= OnCancel;
+    }
+
+    void OnCancel(InputAction.CallbackContext context)
+    {
+        if (currentModel != null)
+            Deselect();
     }
 
     public void BecomPlayerTwo()
@@ -43,12 +59,16 @@ public class CharacterSelector : MonoBehaviour
     public void PickCharacter(GameObject character)
     {
         mc.SelectCharacter(this, character);
+    }
+
+    public void DisplayCharacter(GameObject model)
+    {
         if (isPlayerOne)
         {
             if (currentModel != null)
                 Destroy(currentModel);
 
-            GameObject go = Instantiate(character, modelLocOne);
+            GameObject go = Instantiate(model, modelLocOne);
             currentModel = go;
         }
         else
@@ -56,8 +76,17 @@ public class CharacterSelector : MonoBehaviour
             if (currentModel != null)
                 Destroy(currentModel);
 
-            GameObject go = Instantiate(character, modelLocTwo);
+            GameObject go = Instantiate(model, modelLocTwo);
             currentModel = go;
+        }
+    }
+
+    public void Deselect()
+    {
+        if(currentModel != null)
+        {
+            mc.RemoveCharacter(this);
+            Destroy(currentModel);
         }
     }
 }

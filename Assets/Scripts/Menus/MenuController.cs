@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
@@ -50,6 +51,14 @@ public class MenuController : MonoBehaviour
             playerOneCharacter = character;
         else
             playerTwoCharacter = character;
+    }
+
+    public void RemoveCharacter(CharacterSelector c)
+    {
+        if (c.isPlayerOne)
+            playerOneCharacter = null;
+        else
+            playerTwoCharacter = null;
     }
 
     public void ChangeToCharacterSelect()
