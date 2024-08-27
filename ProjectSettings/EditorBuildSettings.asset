@@ -8,5 +8,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/UseTileMap.unity
     guid: 0d4fe1cd8b37828438b730ee747ccb08
+  - enabled: 1
+    path: Assets/Scenes/StartMenu.unity
+    guid: 8fac1db2757ca80408e9fe83da25329f
+  - enabled: 1
+    path: Assets/Scenes/TestLoadedScene.unity
+    guid: 283a8ce5907df054e8d774dbd5479405
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3853ce00892f08a479f142208cd2fca7, type: 2}

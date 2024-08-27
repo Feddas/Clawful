@@ -16,6 +16,7 @@ public class CharacterSelector : MonoBehaviour
     public GameObject currentModel;
 
     private InputAction cancelAction;
+    public InputDevice device;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,7 @@ public class CharacterSelector : MonoBehaviour
     private void OnEnable()
     {
         var playerInput = GetComponent<PlayerInput>();
-
+        device = playerInput.devices[0];
         cancelAction = playerInput.actions["Cancel"];
         cancelAction.performed += OnCancel;
     }
@@ -58,7 +59,7 @@ public class CharacterSelector : MonoBehaviour
 
     public void PickCharacter(GameObject character)
     {
-        mc.SelectCharacter(this, character);
+        mc.SelectCharacter(this, character, device.deviceId);
     }
 
     public void DisplayCharacter(GameObject model)

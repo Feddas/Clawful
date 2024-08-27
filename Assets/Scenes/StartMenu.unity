@@ -2047,6 +2047,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1734762263741724642, guid: 73b6d94013bcb92429477ac33cabdaf0, type: 3}
+      propertyPath: currentLevel
+      value: TestLoadedScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734762263741724642, guid: 73b6d94013bcb92429477ac33cabdaf0, type: 3}
       propertyPath: characterMenu
       value: 
       objectReference: {fileID: 2396064055703175398, guid: e0b428f4c3eb3a449bebbe5bd7ae1d25, type: 3}

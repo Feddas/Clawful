@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
@@ -22,17 +23,61 @@ public class MenuController : MonoBehaviour
     public PlayerInputManager pm;
 
     public GameObject playerOneCharacter;
+    public int idOne;
     public GameObject playerTwoCharacter;
+    public int idTwo;
+
+    public float readyTimer = 5;
+    public bool isReady;
+    private bool doneLoad;
+
+    public string currentLevel;
     // Start is called before the first frame update
     void Start()
     {
-
+        DontDestroyOnLoad(this.gameObject);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (isReady && !doneLoad)
+        {
+            if (readyTimer > 0)
+                readyTimer -= Time.fixedDeltaTime;
+            else if (readyTimer <= 0)
+            {
+                doneLoad = true;
+                SceneManager.LoadScene(currentLevel);
+            }
+        }
+    }
+
+    //private void Awake()
+    //{
+    //    if (isReady)
+    //    {
+    //        print("find PM");
+    //        pm = FindAnyObjectByType<PlayerInputManager>();
+    //        pm.playerPrefab = playerOneCharacter;
+    //        pm.JoinPlayer(0, idOne);
+    //        pm.playerPrefab = playerTwoCharacter;
+    //        pm.JoinPlayer(1, idTwo);
+    //    }
+    //}
+
+    private void OnLevelWasLoaded()
+    {
+        if (isReady)
+        {
+            print("find PM");
+            pm = FindAnyObjectByType<PlayerInputManager>();
+            pm.playerPrefab = playerOneCharacter;
+            pm.JoinPlayer(0,idOne);
+            pm.playerPrefab = playerTwoCharacter;
+            pm.JoinPlayer(1, idTwo);
+            Destroy(this.gameObject);
+        }
     }
 
     public void PlayerJoin(CharacterSelector cs)
@@ -45,12 +90,26 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    public void SelectCharacter(CharacterSelector c, GameObject character)
+    public void SelectCharacter(CharacterSelector c, GameObject character, int newID)
     {
         if (c.isPlayerOne)
+        {
             playerOneCharacter = character;
+            idOne = newID;
+        }
         else
+        {
             playerTwoCharacter = character;
+            idTwo = newID;
+        }
+
+        if (playerTwoCharacter != null && playerOneCharacter != null)
+            isReady = true;
+        else
+        {
+            isReady = false;
+            readyTimer = 5;
+        }
     }
 
     public void RemoveCharacter(CharacterSelector c)

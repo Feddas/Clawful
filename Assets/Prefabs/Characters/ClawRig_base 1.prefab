@@ -2817,18 +2817,6 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 4490d6ea-39e3-4ae6-9380-30e587bb711c
-    m_ActionName: PlayerOne/Move[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8f59ca23-52b0-46f8-88d8-2f7a258a8a8a
-    m_ActionName: PlayerOne/ActivateClaw[/Keyboard/rightCtrl]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 7338930a-5523-4b74-870c-4fc1f488eb7e
-    m_ActionName: PlayerOne/ChargeClaw[/Keyboard/leftShift,/XInputControllerWindows/rightShoulder]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: 6f3c00c4-353c-49ec-b17e-ecfb91ebc397
     m_ActionName: PlayerOne/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right]
   - m_PersistentCalls:
@@ -2839,6 +2827,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 031752dc-a7c3-4793-a998-0689944207b0
     m_ActionName: PlayerOne/ChargeClaw[/Keyboard/leftShift,/XInputControllerWindows/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4177bd9a-0384-4248-8003-842e4bb62c0b
+    m_ActionName: PlayerMenu/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 48af416b-ee0b-446e-ab32-298ef00acd83
+    m_ActionName: PlayerMenu/Select[/Keyboard/rightCtrl,/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: eb7b4dc0-d6a7-4b9e-bab9-2e1f05cffa64
+    m_ActionName: PlayerMenu/Deselect[/Keyboard/rightShift,/XInputControllerWindows/rightShoulder]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerOne
@@ -2857,7 +2857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerOne: 1
-  canFunction: 0
+  canFunction: 1
   speed: 35
   yPosition: 0
   dj2D: {fileID: 666353967440637506}
