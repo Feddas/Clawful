@@ -30,6 +30,7 @@ jobs:
       - if: matrix.targetPlatform == 'Android'
         uses: jlumbroso/free-disk-space@v1.3.1
       - uses: game-ci/unity-builder@v4
+        id: unityBuilder
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -37,7 +38,8 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           versioning: Semantic
-      - run: echo 'built Clawful ${{ matrix.targetPlatform }} v ${{ steps.myBuildStep.outputs.buildVersion }}'
+          version: ${{ steps.unityBuilder.outputs.buildVersion }}
+      - run: echo 'built Clawful ${{ matrix.targetPlatform }} v ${{ steps.unityBuilder.outputs.buildVersion }}'
       - uses: actions/upload-artifact@v3
         with:
           name: Build-${{ matrix.targetPlatform }}
