@@ -73,9 +73,11 @@ public class MenuController : MonoBehaviour
             print("find PM");
             pm = FindAnyObjectByType<PlayerInputManager>();
             pm.playerPrefab = playerOneCharacter;
-            pm.JoinPlayer(0,idOne);
+            InputDevice specificDevice = (InputSystem.GetDeviceById(idOne));
+            pm.JoinPlayer(playerIndex:0, pairWithDevice: specificDevice);
             pm.playerPrefab = playerTwoCharacter;
-            pm.JoinPlayer(1, idTwo);
+            specificDevice = (InputSystem.GetDeviceById(idTwo));
+            pm.JoinPlayer(playerIndex: 1, pairWithDevice: specificDevice);
             Destroy(this.gameObject);
         }
     }
