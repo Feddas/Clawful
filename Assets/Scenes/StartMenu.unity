@@ -2047,6 +2047,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1734762263741724642, guid: 73b6d94013bcb92429477ac33cabdaf0, type: 3}
+      propertyPath: spawnOffset
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734762263741724642, guid: 73b6d94013bcb92429477ac33cabdaf0, type: 3}
       propertyPath: currentLevel
       value: TestLoadedScene
       objectReference: {fileID: 0}

@@ -26,6 +26,7 @@ public class MenuController : MonoBehaviour
     public int idOne;
     public GameObject playerTwoCharacter;
     public int idTwo;
+    public float spawnOffset = 5;
 
     public float readyTimer = 5;
     public bool isReady;
@@ -74,11 +75,17 @@ public class MenuController : MonoBehaviour
             pm = FindAnyObjectByType<PlayerInputManager>();
             pm.playerPrefab = playerOneCharacter;
             InputDevice specificDevice = (InputSystem.GetDeviceById(idOne));
-            pm.JoinPlayer(playerIndex:0, pairWithDevice: specificDevice);
+            PlayerInput newPlayer = pm.JoinPlayer(playerIndex:0, pairWithDevice: specificDevice);
+            Transform pTrans = newPlayer.transform.parent;
+            pTrans.position = pTrans.position + (-transform.right * spawnOffset);
+
+
             pm.playerPrefab = playerTwoCharacter;
             specificDevice = (InputSystem.GetDeviceById(idTwo));
-            pm.JoinPlayer(playerIndex: 1, pairWithDevice: specificDevice);
+            newPlayer = pm.JoinPlayer(playerIndex: 1, pairWithDevice: specificDevice);
             Destroy(this.gameObject);
+            pTrans = newPlayer.transform.parent;
+            pTrans.position = pTrans.position + (transform.right * spawnOffset);
         }
     }
 
