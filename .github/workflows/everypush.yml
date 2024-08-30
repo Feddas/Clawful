@@ -16,7 +16,7 @@ jobs:
         targetPlatform:
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
           - StandaloneLinux64 # Build a Linux 64-bit standalone.
-          - WebGL # WebGL build requires being run on a web server
+          - WebGL # WebGL build requires being run on a web server.
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,7 +38,6 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           versioning: Semantic
-          version: ${{ steps.unityBuilder.outputs.buildVersion }}
       - run: echo 'built Clawful ${{ matrix.targetPlatform }} v ${{ steps.unityBuilder.outputs.buildVersion }}'
       - uses: actions/upload-artifact@v3
         with:

@@ -67,6 +67,8 @@ public class MenuPause : MonoBehaviour
     {
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
+#elif UNITY_WEBGL
+        // Application.OpenURL(webplayerQuitURL);
 #else
         Application.Quit();
 #endif

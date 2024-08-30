@@ -16,8 +16,8 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
-          - StandaloneLinux64 # Build an Android .apk standalone app
-          - WebGL # WebGL build requires being run on a web server
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          - WebGL # WebGL build requires being run on a web server.
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,6 +31,7 @@ jobs:
       - if: matrix.targetPlatform == 'Android'
         uses: jlumbroso/free-disk-space@v1.3.1
       - uses: game-ci/unity-builder@v4
+        id: unityBuilder
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -38,7 +39,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           versioning: Semantic
-      - run: echo 'built Clawful ${{ matrix.targetPlatform }} v ${{ steps.myBuildStep.outputs.buildVersion }}'
+      - run: echo 'built Clawful ${{ matrix.targetPlatform }} v ${{ steps.unityBuilder.outputs.buildVersion }}'
       - uses: actions/upload-artifact@v3
         with:
           name: Build-${{ matrix.targetPlatform }}

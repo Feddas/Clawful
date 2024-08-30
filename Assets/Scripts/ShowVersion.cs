@@ -10,11 +10,7 @@ public class ShowVersion : MonoBehaviour
     {
         get
         {
-            if (_versionLabel == null)
-            {
-                _versionLabel = this.GetComponent<TextMeshProUGUI>();
-            }
-            return _versionLabel;
+            return _versionLabel ??= this.GetComponent<TextMeshProUGUI>();
         }
     }
     private TextMeshProUGUI _versionLabel;
