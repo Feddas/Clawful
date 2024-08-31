@@ -928,9 +928,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3644613496794287775, guid: 3a9c308c414745a49a0c3d90e11bff69, type: 3}
+      propertyPath: DestinationGrid
+      value: 
+      objectReference: {fileID: 39975619}
+    - target: {fileID: 3644613496794287775, guid: 3a9c308c414745a49a0c3d90e11bff69, type: 3}
       propertyPath: OnBlobEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 39975619}
+    - target: {fileID: 5205471312538101958, guid: 3a9c308c414745a49a0c3d90e11bff69, type: 3}
+      propertyPath: DestinationGrid
+      value: 
+      objectReference: {fileID: 215788857}
     - target: {fileID: 5205471312538101958, guid: 3a9c308c414745a49a0c3d90e11bff69, type: 3}
       propertyPath: OnBlobEntered.m_PersistentCalls.m_Calls.Array.size
       value: 1

@@ -95,12 +95,6 @@ public class BlobBall : MonoBehaviour
         this.subPart.circleCollider.enabled = (false == isATile);
     }
 
-    /// <summary> Moves this ball to <paramref name="position"/> over <paramref name="columnDuration"/> </summary>
-    public void LerpTo(Vector3 position)
-    {
-        StartCoroutine(LerpToCoroutine(position));
-    }
-
     /// <summary> Prepares if a ball moved at <paramref name="position"/> would cause this ball to fall. </summary>
     public void OtherBallRemoved(Vector2 position)
     {
@@ -114,23 +108,5 @@ public class BlobBall : MonoBehaviour
 
         Debug.Log($"{this.name} at {this.transform.position} is falling to {this.FloorSensor.FallsUntil.ToString("F1")} due to ball removed at {position}");
         this.FloorSensor.SetNoFloor(this);
-    }
-
-    private IEnumerator LerpToCoroutine(Vector3 end)
-    {
-        Vector2 start = this.transform.position;
-        float time = 0;
-        float columnDuration = 0.2f;
-        while (time < columnDuration)
-        {
-            this.transform.position = Vector2.Lerp(start, end, time / columnDuration);
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.identity, time / columnDuration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-        this.transform.position = end;
-        this.transform.rotation = Quaternion.identity;
-
-        this.subPart.rb.bodyType = RigidbodyType2D.Dynamic;
     }
 }

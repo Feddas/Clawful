@@ -56,10 +56,6 @@ public class BlobGrid : MonoBehaviour
     /// <summary> Called by EnterGrid.cs's OnBlobEntered UnityEvent </summary>
     public void AddToGrid(BlobBall blobBall)
     {
-        var newPosition = SnapToClosestCell(blobBall.transform.position);
-        newPosition += cellCornerToCenter; // account for cell pivot in lower left and ball pivot in center
-        blobBall.LerpTo(newPosition);
-
         if (false == (blobBall is BombBall))
         {
             // subscribe to tile removed event that happens when bombball drops. This event controls the ball converting from a tile to a rigidbody
@@ -67,13 +63,18 @@ public class BlobGrid : MonoBehaviour
         }
 
         var floor = blobBall.FloorSensor;
-        if (floor != null)
-        {
-            floor.GridName = this.name;
-            floor.MaxHeight = this.transform.position.y + gridHeight + 0.6f;
-            floor.OnHitFloor += Floor_OnHitFloor;
-            floor.OnFloorMissing += Floor_OnFloorMissing;
-        }
+        floor.GridName = this.name;
+        floor.MaxHeight = this.transform.position.y + gridHeight + 0.6f;
+        floor.OnHitFloor += Floor_OnHitFloor;
+        floor.OnFloorMissing += Floor_OnFloorMissing;
+    }
+
+    /// <returns> the world position center of the tile closest to the given<paramref name="worldPosition"/></returns>
+    public Vector2 SnapToClosestCell(Vector2 worldPosition)
+    {
+        var gridLocal = tilemap.WorldToCell(worldPosition);
+        var gridWorld = (Vector2)tilemap.CellToWorld(gridLocal);
+        return gridWorld + cellCornerToCenter; // account for cell pivot in lower left and ball pivot in center;
     }
 
     private void initTilemap()
@@ -191,13 +192,6 @@ public class BlobGrid : MonoBehaviour
 
         // link cell with neighboring cells
         this.tilemap.SetTile((Vector3Int)position, coloredTile);
-    }
-
-    /// <returns> the world position center of the tile closest to the given<paramref name="worldPosition"/></returns>
-    private Vector2 SnapToClosestCell(Vector2 worldPosition)
-    {
-        var gridPosition = tilemap.WorldToCell(worldPosition);
-        return tilemap.CellToWorld(gridPosition);
     }
 
     private void Start()
