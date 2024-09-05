@@ -119,21 +119,24 @@ public class ClawScript : MonoBehaviour
 
     private void DetectDoubleTap(Vector2 input)
     {
-        if (input.x < 0) // Left movement key pressed
+        if (canFunction)
         {
-            if (Time.time - lastTapTimeLeft < doubleTapTime)
+            if (input.x < 0) // Left movement key pressed
             {
-                DashLeft();
+                if (Time.time - lastTapTimeLeft < doubleTapTime)
+                {
+                    DashLeft();
+                }
+                lastTapTimeLeft = Time.time;
             }
-            lastTapTimeLeft = Time.time;
-        }
-        else if (input.x > 0) // Right movement key pressed
-        {
-            if (Time.time - lastTapTimeRight < doubleTapTime)
+            else if (input.x > 0) // Right movement key pressed
             {
-                DashRight();
+                if (Time.time - lastTapTimeRight < doubleTapTime)
+                {
+                    DashRight();
+                }
+                lastTapTimeRight = Time.time;
             }
-            lastTapTimeRight = Time.time;
         }
     }
 

@@ -113,8 +113,8 @@ TextureImporter:
       name: ClawBits_Test_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 579
+        x: 59
+        y: 625
         width: 186
         height: 368
       alignment: 0
@@ -134,10 +134,10 @@ TextureImporter:
       name: ClawBits_Test_1
       rect:
         serializedVersion: 2
-        x: 314
-        y: 633
-        width: 185
-        height: 314
+        x: 491
+        y: 706
+        width: 145
+        height: 245
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,10 +155,10 @@ TextureImporter:
       name: ClawBits_Test_2
       rect:
         serializedVersion: 2
-        x: 538
-        y: 579
-        width: 317
-        height: 368
+        x: 676
+        y: 663
+        width: 249
+        height: 288
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -176,8 +176,8 @@ TextureImporter:
       name: ClawBits_Test_3
       rect:
         serializedVersion: 2
-        x: 77
-        y: 0
+        x: 136
+        y: 46
         width: 109
         height: 543
       alignment: 0
@@ -197,8 +197,8 @@ TextureImporter:
       name: ClawBits_Test_4
       rect:
         serializedVersion: 2
-        x: 484
-        y: 171
+        x: 543
+        y: 217
         width: 186
         height: 375
       alignment: 0
