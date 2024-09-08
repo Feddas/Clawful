@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.feddas.inputrebind": {
+      "version": "file:UiRebinding",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.feddas.librarysf": {
       "version": "https://github.com/Feddas/upm.git?path=/Assets/LibrarySf",
       "depth": 0,

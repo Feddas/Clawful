@@ -1,0 +1,14 @@
+{
+  "name": "com.feddas.inputrebind",
+  "displayName": "UI Rebinding",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "category": "",
+  "description": "UI component to create UI for rebinding actions. Combines UnityEngine.InputSystem.Samples.RebindUI , Sasquatch B https://youtu.be/qXbjyzBlduY , Samyam https://youtu.be/csqVa2Vimao",
+  "dependencies": {},
+  "keywords": [
+    "InputSystem",
+    "Rebind"
+  ],
+  "samples": []
+}
