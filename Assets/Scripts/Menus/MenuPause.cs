@@ -1,18 +1,21 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary> Functionality for all buttons related to the in-game pause panel </summary>
+[RequireComponent(typeof(BreadcrumbManager))]
 public class MenuPause : MonoBehaviour
 {
+    [Tooltip("InputAction or button used to show and hide the pause menu.")]
+    [SerializeField]
+    private InputAction TogglePause;
+
     [Tooltip("When true, the pause panel is show in the Unity Scene view.")]
     [SerializeField]
     private bool ShowInEditor;
-
-    [Tooltip("First button to have focus when the menu is opened. Also tells the UI nav system where to start from.")]
-    [SerializeField]
-    private Button FirstSelected;
 
     [Header("Sub Parts")]
     [SerializeField]
@@ -21,14 +24,56 @@ public class MenuPause : MonoBehaviour
     [SerializeField]
     private GameObject PausePanel;
 
+    [Tooltip("Windows that should also be closed when the pause menu is closed.")]
+    [SerializeField]
+    private List<GameObject> Modals;
+
+    public BreadcrumbManager breadcrumbs
+    {
+        get
+        {
+            return _breadcrumbs ??= this.GetComponent<BreadcrumbManager>();
+        }
+    }
+    private BreadcrumbManager _breadcrumbs;
+
     private void OnValidate()
     {
         PauseActive(ShowInEditor);
     }
 
-    void Start()
+    void OnEnable()
     {
-        PauseStop(); // hide pause panel
+        breadcrumbs.OpenNewCrumb(PauseStartButton);
+        PauseStop();
+
+        TogglePause.Enable();
+        TogglePause.performed += TogglePause_performed;
+    }
+
+    private void OnDisable()
+    {
+        TogglePause.performed -= TogglePause_performed;
+        TogglePause.Disable();
+
+        breadcrumbs.CloseAll();
+    }
+
+    private void TogglePause_performed(InputAction.CallbackContext obj)
+    {
+        // current active state
+        bool isActive = false == PauseStartButton.activeInHierarchy;
+
+        // toggle to its opposite
+        PauseActive(false == isActive);
+        if (isActive)
+        {
+            breadcrumbs.CloseAll(but: 1);
+        }
+        else
+        {
+            breadcrumbs.OpenNewCrumb(PausePanel);
+        }
     }
 
     /// <summary> Called by buttons UnityEvents to show that their functionality isn't in yet. </summary>
@@ -50,16 +95,10 @@ public class MenuPause : MonoBehaviour
         PauseActive(false);
     }
 
+    /// <summary> Changes timescale. Showing and hiding of the pausemenu is controlled by <seealso cref="breadcrumbs"/> </summary>
     private void PauseActive(bool isActive)
     {
         Time.timeScale = isActive ? 0f : 1f;
-        PauseStartButton.SetActive(false == isActive);
-        PausePanel.SetActive(isActive);
-
-        if (isActive)
-        {
-            FirstSelected.Select();
-        }
     }
 
     /// <summary> Called by exit button's UnityEvent </summary>
