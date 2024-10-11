@@ -19,6 +19,7 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
             m_BindingIdProperty = serializedObject.FindProperty("m_BindingId");
             m_ActionLabelProperty = serializedObject.FindProperty("m_ActionLabel");
             m_BindingTextProperty = serializedObject.FindProperty("m_BindingText");
+            m_ResetButtonProperty = serializedObject.FindProperty("m_ResetButton");
             m_InputDeviceIconsProperty = serializedObject.FindProperty("m_InputDeviceIcons");
             m_RebindOverlayProperty = serializedObject.FindProperty("m_RebindOverlay");
             m_UpdateBindingUIEventProperty = serializedObject.FindProperty("m_UpdateBindingUIEvent");
@@ -62,6 +63,7 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
             {
                 EditorGUILayout.PropertyField(m_ActionLabelProperty);
                 EditorGUILayout.PropertyField(m_BindingTextProperty);
+                EditorGUILayout.PropertyField(m_ResetButtonProperty);
                 EditorGUILayout.PropertyField(m_InputDeviceIconsProperty);
                 EditorGUILayout.PropertyField(m_RebindOverlayProperty);
             }
@@ -155,6 +157,7 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
         private SerializedProperty m_BindingIdProperty;
         private SerializedProperty m_ActionLabelProperty;
         private SerializedProperty m_BindingTextProperty;
+        private SerializedProperty m_ResetButtonProperty;
         private SerializedProperty m_InputDeviceIconsProperty;
         private SerializedProperty m_RebindOverlayProperty;
         private SerializedProperty m_RebindStartEventProperty;

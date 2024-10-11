@@ -80,6 +80,16 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
             }
         }
 
+        /// <summary> Button to be deactivated when control is bound to its default key. </summary>
+        public GameObject resetButton
+        {
+            get => m_ResetButton;
+            set
+            {
+                m_ResetButton = value;
+            }
+        }
+
         /// <summary>
         /// Optional text component that receives a text prompt when waiting for a control to be actuated.
         /// Optional text label that will be updated with prompt for user input
@@ -194,6 +204,7 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
         public void UpdateBindingDisplay()
         {
             var displayString = string.Empty;
+            var hasOverrides = false;
             var deviceLayoutName = default(string);
             var controlPath = default(string);
 
@@ -203,12 +214,18 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
             {
                 var bindingIndex = action.bindings.IndexOf(x => x.id.ToString() == m_BindingId);
                 if (bindingIndex != -1)
+                {
                     displayString = action.GetBindingDisplayString(bindingIndex, out deviceLayoutName, out controlPath, displayStringOptions);
+                    hasOverrides = action.bindings[bindingIndex].hasOverrides;
+                }
             }
 
-            // Set on label (if any).
+            // Set on UI.
             if (m_BindingText != null)
                 m_BindingText.text = displayString;
+
+            if (resetButton != null)
+                resetButton?.SetActive(hasOverrides);
 
             // Give listeners a chance to configure UI in response.
             m_UpdateBindingUIEvent?.Invoke(this, displayString, deviceLayoutName, controlPath);
@@ -485,6 +502,10 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
         [Tooltip("Text label that will receive the current, formatted binding string.")]
         [SerializeField]
         private TMPro.TextMeshProUGUI m_BindingText;
+
+        [Tooltip("Button to be deactivated when control is bound to its default key.")]
+        [SerializeField]
+        private GameObject m_ResetButton;
 
         [Tooltip("Maps formatted binding string to an image icon.")]
         [SerializeField]

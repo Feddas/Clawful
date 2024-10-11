@@ -9,7 +9,7 @@ public class MenuRebindPanel : MonoBehaviour
     /// <summary> Reference to all players in the game </summary>
     private static PlayerInput[] players;
 
-    [Tooltip("Text that will be updated with the name of the current player who's controls are being modified.")]
+    [Tooltip("Text that will be updated with errors about players connected.")]
     [SerializeField]
     private TextMeshProUGUI displayErrors;
 
@@ -22,27 +22,30 @@ public class MenuRebindPanel : MonoBehaviour
     [SerializeField]
     private BreadcrumbManager breadcrumbManager;
 
-    private string? initialText = null;
+    /// <summary> caches the value of <see cref="displayErrors"/> text's serialized Unity Inspector value. Its text is overwritten with errors. Then is restored, with this variable, when there is no longer an error. </summary>
+    private string textBeforeError = null;
 
     private void OnEnable()
     {
         players = FindObjectsByType<PlayerInput>(FindObjectsSortMode.None);
 
+        // can't find players
         if (players == null || players.Length == 0)
         {
             activeWithPlayers.interactable = false;
-            if (initialText == null)
+            if (textBeforeError == null) // then cache the valuve of displayErrors.text before it is over written.
             {
-                initialText = displayErrors.text;
+                textBeforeError = displayErrors.text;
             }
             displayErrors.text = "No players have joined";
             return;
         }
-        else
+
+        else // allow players to rebind keys
         {
-            if (initialText != null)
+            if (textBeforeError != null) // then restore the value of displayErrors.text from the cache
             {
-                displayErrors.text = initialText;
+                displayErrors.text = textBeforeError;
             }
             activeWithPlayers.interactable = true;
         }

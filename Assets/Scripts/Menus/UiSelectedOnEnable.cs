@@ -13,4 +13,15 @@ public class UiSelectedOnEnable : MonoBehaviour
     {
         FirstSelected.Select();
     }
+
+    private void Update()
+    {
+        // When a mouse pointer selects null UI it disables a gamepads ability to navigate UI. Fix by reverting to FirstSelected if gamepad is actuated (ref https://youtu.be/lclDl-NGUMg?t=3290 )
+        if (UnityEngine.InputSystem.Gamepad.current != null
+            && UnityEngine.InputSystem.Gamepad.current.wasUpdatedThisFrame
+            && UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject == null)
+        {
+            FirstSelected.Select();
+        }
+    }
 }
