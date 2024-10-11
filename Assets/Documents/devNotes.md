@@ -42,3 +42,21 @@ enabled](https://game.ci/docs/github/activation/#personal-license).
 
 - [everypush.yml](../../.github/workflows/everypush.yml) - Builds Win, Linux, & WebGL every push to the repo. If pushing to main, also deploys WebGL website.
 - [manual.yml](../../.github/workflows/manual.yml) - Runs similiar flow as everypush,yml. But any branch. Probably (not tested) uses whatever is the last commit to deploy WebGL website.
+
+# Input System
+
+https://docs.unity3d.com/Packages/com.unity.inputsystem@1.2/api/UnityEngine.InputSystem.InputAction.html
+
+## Fix Editor
+
+The project is using inputsystem v1.7.0, which has a bug when using the listening for key feature. Fix in file C:\Users\[username]\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.inputsystem@1.7.0\InputSystem\Editor\Internal\AdvancedDropdown\AdvancedDropdownGUI.cs
+Line 16 add an 'r' to "ToolbarSeachTextField" => "ToolbarSearchTextField" as shown in https://youtu.be/lclDl-NGUMg?t=318
+
+## UI
+
+UiSelectedOnEnable.cs - UI navigation (without a mouse pointer) needs a starting point. This script defines what that starting point is, `FirstSelected`. Therefore, this script should be on every full screen UI panel.
+
+## Misc tips
+
+PlayerInput properties can be modified with stackoverflow.com/questions/61611367
+
