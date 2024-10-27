@@ -241,26 +241,32 @@ namespace UnityEngine.InputSystem.Samples.UiRebind
 
             if (m_AllowDuplicateBindings)
             {
-                if (action.bindings[bindingIndex].isComposite)
-                {
-                    // It's a composite. Remove overrides from part bindings.
-                    for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
-                        action.RemoveBindingOverride(i);
-                }
-                else
-                {
-                    action.RemoveBindingOverride(bindingIndex);
-                }
+                ResetAllowingDuplicates(action, bindingIndex);
             }
             else
             {
-                ResetBinding(action, bindingIndex);
+                ResetNoDuplicates(action, bindingIndex);
             }
 
             UpdateBindingDisplay();
+            m_RebindStopEvent?.Invoke(this, null);
         }
 
-        private void ResetBinding(InputAction action, int bindingIndex)
+        public static void ResetAllowingDuplicates(InputAction action, int bindingIndex)
+        {
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                // It's a composite. Remove overrides from part bindings.
+                for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
+                    action.RemoveBindingOverride(i);
+            }
+            else
+            {
+                action.RemoveBindingOverride(bindingIndex);
+            }
+        }
+
+        private void ResetNoDuplicates(InputAction action, int bindingIndex)
         {
             InputBinding newBinding = action.bindings[bindingIndex];
             string oldOverridePath = newBinding.overridePath;
