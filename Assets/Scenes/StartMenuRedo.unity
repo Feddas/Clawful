@@ -201,6 +201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FirstSelected: {fileID: 337060768}
+  isGroupSelect: 1
 --- !u!1 &157255842
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,8 +395,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Move\n  gamepad: stick, D-Pad\n  keyboard: WASD or \u2191\u2193\u2190\u2192\n\nActivate
     Claw or UI Select\n  gamepad: south button\n  keyboard: space or right control\n\nCharge
-    Claw or UI Cancel\n  gamepad: right shoulder\n  keyboard: left shift or right
-    shift"
+    Claw\n  gamepad: right shoulder\n  keyboard: left shift or right shift"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1754,9 +1754,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1117200616}
-  - {fileID: 1502046705}
   - {fileID: 1934473296}
   - {fileID: 35953216}
+  - {fileID: 1502046705}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2014,6 +2014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FirstSelected: {fileID: 2060393282}
+  isGroupSelect: 0
 --- !u!1 &2047271948
 GameObject:
   m_ObjectHideFlags: 0
