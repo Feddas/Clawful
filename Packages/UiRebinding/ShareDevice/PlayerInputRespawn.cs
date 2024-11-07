@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace ShareDevice
 {
+    /// <summary> Stores where a PlayerInput should respawn. </summary>
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerInputRespawn : MonoBehaviour
     {

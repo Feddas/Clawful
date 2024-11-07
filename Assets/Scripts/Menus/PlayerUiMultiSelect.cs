@@ -10,10 +10,10 @@ namespace ShareDevice
     [RequireComponent(typeof(MultiplayerEventSystem))]
     public class PlayerUiMultiSelect : MonoBehaviour
     {
-        [Header("This script handles player interaction. Toggling\n" +
-                "UI navigation depending on if the player has\n" +
-                "submitted a choice. It also positions and colors\n" +
-                "each players cursor.")]
+        [Header("Allows multiple players to interact with UI.\n"
+              + "Toggling UI navigation depending on if the player\n"
+              + "has locked or submitted a choice. It also positions\n" +
+                "and colors each players cursor.")]
         [Space(16f)]
 
         [Tooltip("If true, wait for all active eventsystems to complete selection.")]
@@ -68,11 +68,11 @@ namespace ShareDevice
         }
         private InputSystemUIInputModule _uiInput;
 
+        /// <summary> cache playerInput.currentControlScheme to handle playerInput being destroyed before this. </summary>
+        private string controlScheme;
+
         public void Start()
         {
-            // Initialize with UiSelectedOnEnable
-            this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
-
             // customize cursor icon for each player
             Cursor.sprite = Hover;
             Cursor.color = Random.ColorHSV(0, 1, 1, 1, .8f, .8f);
@@ -82,6 +82,18 @@ namespace ShareDevice
             // Cache uiInput.move so that it can be temporarily nulled
             // alternative: remove this device from the Navigate InputAction. Shawn couldn't get that to work https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/ActionBindings.html#choosing-which-devices-to-use / https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html#UnityEngine_InputSystem_InputAction_bindingMask
             navigate = uiInput.move;
+        }
+
+        public void OnEnable()
+        {
+            controlScheme ??= playerInput.currentControlScheme;
+            UiSelectedOnEnable.ActiveEventSystems.Add(controlScheme, eventSystem);
+            this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
+        }
+
+        public void OnDisable()
+        {
+            UiSelectedOnEnable.ActiveEventSystems.Remove(controlScheme);
         }
 
         /// <summary> Occurs when player has toggled their choice.

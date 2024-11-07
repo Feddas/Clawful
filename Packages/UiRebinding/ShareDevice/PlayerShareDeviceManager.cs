@@ -26,13 +26,14 @@ namespace ShareDevice
     /// </summary>
     public class PlayerShareDeviceManager : MonoBehaviour
     {
-        [Header("A demonstration of limiting multiple schemes to a\n" +
-                "max of 2 players. Use ctrl left, ctrl right,\n" +
-                "spacebar, or numpad enter to join a cube.\n"
+        [Header("Allows multiple control schemes, on the same device,\n"
+              + "to join. ActionToJoin must specify control schemes.\n"
+              + "SpawnPositionsAvailable sets max number of players.\n"
               + "Players can drop by holding down their bound join\n"
               + "button. They can rejoin using any join button.")]
+        [Space(16f)]
 
-        [Tooltip("Buttons available to press for a player to join.")]
+        [Tooltip("Buttons available to press for a player to join. Each control scheme should only have one button for this action. Composite actions will not work.")]
         [SerializeField]
         private InputActionReference actionToJoin;
 
@@ -154,7 +155,7 @@ namespace ShareDevice
                 .FirstOrDefault();
             spawnPositionsAvailable[spawnPosition.Index] = null;
 
-            // disable listening for a new player to join
+            // disable listening for a new player on the same control scheme
             availableSchemes.Remove(thatPressed);
             if (atMaxPlayers())
             {
