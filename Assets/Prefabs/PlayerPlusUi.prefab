@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 6801105370147269147}
   - component: {fileID: 2500843423115498235}
   - component: {fileID: 7693859602333620466}
+  - component: {fileID: 6838230951652747484}
   m_Layer: 0
   m_Name: PlayerPlusUi
   m_TagString: Untagged
@@ -247,6 +248,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65efa4b355decbf4590bcb4fdbbbc389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGroupSelect: 1
   Cursor: {fileID: 4078845049581129709}
   Hover: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
   Select: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+--- !u!114 &6838230951652747484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6071642742515115747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d16a323eb13c04b86db5edbbc1e17c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

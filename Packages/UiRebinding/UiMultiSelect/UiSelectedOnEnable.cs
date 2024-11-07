@@ -1,14 +1,16 @@
-using ShareDevice;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using EventSystem = UnityEngine.EventSystems.EventSystem;
 
 namespace ShareDevice
 {
     public class UiSelectedOnEnable : MonoBehaviour
     {
+        /// <summary> key is playerInput.currentControlScheme. </summary>
+        public static Dictionary<string, UnityEngine.InputSystem.UI.MultiplayerEventSystem> ActiveEventSystems { get; set; } = new Dictionary<string, UnityEngine.InputSystem.UI.MultiplayerEventSystem>();
+
         /// <summary> Most recent enabled instance of UiSelectedOnEnable </summary>
         public static UiSelectedOnEnable ActiveInstance
         {
@@ -37,25 +39,21 @@ namespace ShareDevice
         private void OnEnable()
         {
             activeInstance = this;
-            FirstSelected.Select();
+            ForceSelection();
         }
 
         private void Update()
         {
-            ForceSelection(EventSystem.current);
+            ForceSelection();
         }
 
-        private void ForceSelection(EventSystem eventSystem)
+        private void ForceSelection()
         {
-            if (eventSystem == null)
+            // Each EventSystem should always have a UI element selected. Otherwise navigation can't work.
+            foreach (var eventSystem in ActiveEventSystems
+                .Where(d => d.Value.currentSelectedGameObject == null || false == d.Value.currentSelectedGameObject.activeInHierarchy))
             {
-                return;
-            }
-
-            // Each EventSystem should always have a UI element selected.
-            if (eventSystem.currentSelectedGameObject == null)
-            {
-                FirstSelected.Select();
+                eventSystem.Value.SetSelectedGameObject(FirstSelected.gameObject);
             }
         }
     }
