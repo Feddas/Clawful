@@ -185,6 +185,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: abaf4191-8062-4d0d-8aaa-1512a127b438
     m_ActionName: UI/Cancel[/Keyboard/w,/Keyboard/upArrow,/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7693859602333620466}
+        m_TargetAssemblyTypeName: ShareDevice.PlayerUiMultiSelect, InputRebind
+        m_MethodName: OnLeaveGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 487156e0-ae6c-48de-a9f4-edf41a7d76b4
+    m_ActionName: Player/LeaveGame[/Keyboard/leftShift,/Keyboard/rightShift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

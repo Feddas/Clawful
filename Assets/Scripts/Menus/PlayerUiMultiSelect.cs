@@ -1,3 +1,4 @@
+using InputShareDevice;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -36,10 +37,10 @@ namespace ShareDevice
 
         /// <summary> Support up to 4 players. These pivots ensure cursor images don't overlap with one another. </summary>
         private Vector2[] cursorPivot = new Vector2[4] {
-        new Vector2(1, 0),
-        new Vector2(0, 0),
-        new Vector2(1, 1),
-        new Vector2(0, 1) };
+            new Vector2(1, 0),
+            new Vector2(0, 0),
+            new Vector2(1, 1),
+            new Vector2(0, 1) };
 
         private PlayerInput playerInput
         {
@@ -94,6 +95,17 @@ namespace ShareDevice
         public void OnDisable()
         {
             UiSelectedOnEnable.ActiveEventSystems.Remove(controlScheme);
+        }
+
+        /// <summary> Required <see cref="PlayerInput"/> component invokes this function via UnityEvent when LeaveGame action is triggered. </summary>
+        public void OnLeaveGame(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                Destroy(Cursor.gameObject);
+                Destroy(gameObject);
+                // TODO: check if "PlayerInputManager" can (or should) be re-enabled so that a new player can rejoin
+            }
         }
 
         /// <summary> Occurs when player has toggled their choice.

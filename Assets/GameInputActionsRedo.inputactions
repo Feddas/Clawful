@@ -1,5 +1,5 @@
 {
-    "name": "GameInputActionsAxis",
+    "name": "GameInputActionsRedo",
     "maps": [
         {
             "name": "Player",
@@ -27,6 +27,15 @@
                     "name": "ChargeClaw",
                     "type": "Button",
                     "id": "031752dc-a7c3-4793-a998-0689944207b0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeaveGame",
+                    "type": "Button",
+                    "id": "487156e0-ae6c-48de-a9f4-edf41a7d76b4",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -82,6 +91,61 @@
                     "name": "Right",
                     "id": "a479108a-9425-4a94-8cca-cd0fc005d25e",
                     "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "GamepadLeftStick",
+                    "id": "40e6b34b-061d-438b-a919-137b7b365a4b",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Up",
+                    "id": "065224d5-301a-410e-b1b4-cf6b97c365c7",
+                    "path": "<Gamepad>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "30424cdf-1e32-46fa-9680-2483cd04374f",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "6e29d58b-7266-46f1-b52e-25aa3c5b5ed8",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "d65772b4-90d4-4ab6-bbac-f3b69389a94c",
+                    "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -264,6 +328,39 @@
                     "action": "ChargeClaw",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1ff62a34-b89c-4072-8a08-eae598d1dc28",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "Hold(duration=2)",
+                    "processors": "",
+                    "groups": "KeyboardLeft",
+                    "action": "LeaveGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7b13eb02-710f-408b-bdd7-b5a390daaacb",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "Hold(duration=2)",
+                    "processors": "",
+                    "groups": "KeyboardRight",
+                    "action": "LeaveGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40fc19dd-a7e8-4f0f-86bd-dbd90feb5f0c",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "Hold(duration=2)",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "LeaveGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -348,6 +445,61 @@
                     "name": "right",
                     "id": "4b1919f5-9056-49c1-8eeb-2c37e4d7a519",
                     "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "GamepadLeftStick",
+                    "id": "85188d84-2f88-4c3d-ac50-84b7005b99dd",
+                    "path": "2DVector(mode=2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Up",
+                    "id": "44839ceb-dd4a-42d5-bb1b-3e22f03cd396",
+                    "path": "<Gamepad>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "5412b028-3936-40db-bc53-6df2d645ca6f",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "e78239a6-5c7b-4f7e-ac9c-ab82668c16f9",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "401ad831-c594-46bc-aa42-756327c73cf6",
+                    "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
