@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 ////TODO: deal with composites that have parts bound in different control schemes
 
-namespace InputExtended
+namespace InputShareDevice
 {
     /// <summary>
     /// A reusable component with a self-contained UI for rebinding a single action.

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ShareDevice
+namespace InputShareDevice
 {
     public class UiSelectedOnEnable : MonoBehaviour
     {
