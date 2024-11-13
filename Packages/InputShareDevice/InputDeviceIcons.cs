@@ -1,35 +1,33 @@
 using System;
+using UnityEngine.UI;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 ////TODO: have updateBindingUIEvent receive a control path string, too (in addition to the device layout name)
 
-namespace InputExtended
+namespace InputShareDevice
 {
     /// <summary>
     /// This is an example for how to override the default display behavior of bindings. The component
-    /// hooks into <see cref="uGuiRebindAction.updateBindingUIEvent"/> which is triggered when UI display
+    /// hooks into <see cref="UiRebindAction.updateBindingUIEvent"/> which is triggered when UI display
     /// of a binding should be refreshed. It then checks whether we have an icon for the current binding
     /// and if so, replaces the default text display with an icon.
     /// </summary>
-    public class GamepadIconsExample : MonoBehaviour
+    [CreateAssetMenu(fileName = "InputDeviceIcons", menuName = "Scriptable Objects/Input Device Icons", order = 1)]
+    public class InputDeviceIcons : ScriptableObject
     {
         public GamepadIcons xbox;
         public GamepadIcons ps4;
 
-        protected void OnEnable()
+        public void Initialize(UiRebindAction uiRebindAction)
         {
-            // Hook into all updateBindingUIEvents on all RebindActionUI components in our hierarchy.
-            var rebindUIComponents = transform.GetComponentsInChildren<uGuiRebindAction>();
-            foreach (var component in rebindUIComponents)
-            {
-                component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
-                component.UpdateBindingDisplay();
-            }
+            // Hook into updateBindingUIEvents on UiRebindAction.
+            uiRebindAction.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
+            uiRebindAction.UpdateBindingDisplay();
         }
 
-        protected void OnUpdateBindingDisplay(uGuiRebindAction component, string bindingDisplayString, string deviceLayoutName, string controlPath)
+        protected void OnUpdateBindingDisplay(UiRebindAction component, string bindingDisplayString, string deviceLayoutName, string controlPath)
         {
             if (string.IsNullOrEmpty(deviceLayoutName) || string.IsNullOrEmpty(controlPath))
                 return;
@@ -43,8 +41,10 @@ namespace InputExtended
             var textComponent = component.bindingText;
 
             // Grab Image component.
-            var imageGO = textComponent.transform.parent.Find("ActionBindingIcon");
-            var imageComponent = imageGO.GetComponent<Image>();
+            var bindingButton = textComponent.transform.parent;
+            var imageComponent = bindingButton
+                .GetComponentsInChildren<Image>(includeInactive: true)
+                .First(o => o.transform != bindingButton);
 
             if (icon != null)
             {

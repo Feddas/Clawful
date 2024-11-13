@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace InputExtended
+namespace InputShareDevice
 {
     public class CopyBinding : MonoBehaviour
     {

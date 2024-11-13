@@ -235,11 +235,14 @@
       },
       "url": "https://packages.unity.com"
     },
-    "net.featherly.shawn.inputextended": {
-      "version": "file:UiRebinding",
+    "net.featherly.shawn.inputsharedevice": {
+      "version": "file:InputShareDevice",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.inputsystem": "1.7.0",
+        "com.unity.textmeshpro": "3.0.6"
+      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
