@@ -32,6 +32,15 @@ namespace ShareDevice
         [SerializeField]
         private Sprite Select;
 
+        [Tooltip("bool payload is true when locked, false when unlocked")]
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent<bool> OnLockedForGroupSelection;
+
+        [Header("readonly")]
+        [Tooltip("UI panel with UiSelectedOnEnable.IsGroupSelect is show and this player has locked their selection.")]
+        [SerializeField]
+        private bool cursorLocked;
+
         /// <summary> Navigation will be toggled when the player submits or retracts a selection. </summary>
         private InputActionReference navigate;
 
@@ -122,7 +131,7 @@ namespace ShareDevice
 
         /// <summary> Occurs when player has moved, navigating the UI.
         /// <see cref="PlayerInput"/> component invokes this function via UnityEvent </summary>
-        public void OnNavigate(InputAction.CallbackContext context)//InputValue value)
+        public void OnNavigate(InputAction.CallbackContext context)
         {
             if (context.phase != InputActionPhase.Performed)
             {
@@ -147,16 +156,20 @@ namespace ShareDevice
             {
                 yield break;
             }
-            if (uiInput.move == null)
+            if (uiInput.move == null) // disable lock
             {
+                cursorLocked = false;
                 uiInput.move = navigate;
                 Cursor.sprite = Hover;
             }
-            else
+            else // enable lock
             {
+                cursorLocked = true;
                 uiInput.move = null;
                 Cursor.sprite = Select;
             }
+
+            OnLockedForGroupSelection?.Invoke(cursorLocked);
         }
 
         /// <summary> When OnNavigate is called EventSystem.CurrentSelectedGameObject hasn't been updated yet. After a frame, it will be updated. </summary>

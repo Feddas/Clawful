@@ -214,6 +214,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: ClawBits_Test_1n2
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 665
+        width: 434
+        height: 286
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3611a8e0227f6fc48945dcee57d4b89e
+      internalID: -579862832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -227,6 +248,7 @@ TextureImporter:
     nameFileIdTable:
       ClawBits_Test_0: 1388661555
       ClawBits_Test_1: -1782238888
+      ClawBits_Test_1n2: -579862832
       ClawBits_Test_2: -917929545
       ClawBits_Test_3: -183696684
       ClawBits_Test_4: -98499057
