@@ -32,12 +32,8 @@ namespace ShareDevice
         [SerializeField]
         private Sprite Select;
 
-        [Tooltip("bool payload is true when locked, false when unlocked")]
-        [SerializeField]
-        private UnityEngine.Events.UnityEvent<bool> OnLockedForGroupSelection;
-
         [Header("readonly")]
-        [Tooltip("UI panel with UiSelectedOnEnable.IsGroupSelect is show and this player has locked their selection.")]
+        [Tooltip("UI panel with UiSelectedOnEnable.IsGroupSelect is shown and this player has locked their selection.")]
         [SerializeField]
         private bool cursorLocked;
 
@@ -169,7 +165,8 @@ namespace ShareDevice
                 Cursor.sprite = Select;
             }
 
-            OnLockedForGroupSelection?.Invoke(cursorLocked);
+            // check if this cursorLock changes everyone in the group being locked.
+            LockedSelections.Instance.OnPlayerLockChanged(cursorLocked);
         }
 
         /// <summary> When OnNavigate is called EventSystem.CurrentSelectedGameObject hasn't been updated yet. After a frame, it will be updated. </summary>
