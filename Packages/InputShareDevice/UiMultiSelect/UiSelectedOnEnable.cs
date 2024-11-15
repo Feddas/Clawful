@@ -36,6 +36,18 @@ namespace InputShareDevice
         [SerializeField]
         private bool isGroupSelect;
 
+        [Tooltip("Raised when all players have locked in a selection. payload is true when group selection is locked. payload is false when group selection is broken.")]
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent<bool> OnGroupSelect;
+
+        /// <summary> Invoke this when all active eventsystems have a selection newly locked or broken. </summary>
+        /// <param name="isLocked"> true when group selection is locked. false when group selection is broken. </param>
+        public void InvokeGroupSelect(bool isLocked)
+        {
+            // Debug.Log($"{Time.frameCount} {(isLocked ? "everyone locked" : "lock broken")}. count {ShareDevice.LockedSelections.Instance.LockCount}.");
+            OnGroupSelect.Invoke(isLocked);   // TODO: start/stop a 3 second count down timer before loading game scene.
+        }
+
         private void OnEnable()
         {
             activeInstance = this;

@@ -56,6 +56,7 @@ namespace ShareDevice
         /// <see cref="availableSchemes"/> is needed because PlayerInput.Instantiate(PlayerPrefab...) causes <see cref="actionToJoin"/> to be paired to a single control on a device. Collapsing all previous controls it had to only the matching control.</summary>
         Dictionary<InputControl, string> availableSchemes;
 
+        /// <summary> Subscribes to UnityEvent PlayerInputManager.NotifyPlayerLeft </summary>
         UnityAction<PlayerInput> actionPlayerLeft;
 
         private void Start()
@@ -80,6 +81,8 @@ namespace ShareDevice
 #endif
 
             InputSystem.onActionChange += OnBindingChange;
+
+            LockedSelections.Instance.PlayerCount = spawnPositionsAvailable.Length;
         }
 
         private void OnDestroy()
