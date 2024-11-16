@@ -32,6 +32,10 @@ namespace ShareDevice
         [SerializeField]
         private Sprite Select;
 
+        [Tooltip("Raise new Claw character should be shown. AKA, What to do when the player has changed their individual selection amidst a group selection. bool payload is true when locked, false when unlocked")]
+        [SerializeField]
+        private UnityEngine.Events.UnityEvent<bool> OnSelectionChanged;
+
         [Header("readonly")]
         [Tooltip("UI panel with UiSelectedOnEnable.IsGroupSelect is shown and this player has locked their selection.")]
         [SerializeField]
@@ -39,6 +43,8 @@ namespace ShareDevice
 
         /// <summary> Navigation will be toggled when the player submits or retracts a selection. </summary>
         private InputActionReference navigate;
+
+        private double timeCreated;
 
         /// <summary> Support up to 4 players. These pivots ensure cursor images don't overlap with one another. </summary>
         private Vector2[] cursorPivot = new Vector2[4] {
@@ -88,6 +94,8 @@ namespace ShareDevice
             // Cache uiInput.move so that it can be temporarily nulled
             // alternative: remove this device from the Navigate InputAction. Shawn couldn't get that to work https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/ActionBindings.html#choosing-which-devices-to-use / https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html#UnityEngine_InputSystem_InputAction_bindingMask
             navigate = uiInput.move;
+
+            timeCreated = Time.realtimeSinceStartup;
         }
 
         public void OnEnable()
@@ -117,7 +125,8 @@ namespace ShareDevice
         /// <see cref="PlayerInput"/> component invokes this function via UnityEvent </summary>
         public void OnSubmit(InputAction.CallbackContext context)
         {
-            if (context.phase != InputActionPhase.Performed)
+            if (context.phase != InputActionPhase.Performed
+                || timeCreated == 0) // ignore submit actions triggered at the same time  player joined and was instantiated.
             {
                 return;
             }
@@ -165,7 +174,10 @@ namespace ShareDevice
                 Cursor.sprite = Select;
             }
 
-            // check if this cursorLock changes everyone in the group being locked.
+            // update the players individual selection
+            OnSelectionChanged?.Invoke(cursorLocked);
+
+            // update the groups selection. check if this cursorLock changes everyone in the group being locked (AKA all ready).
             LockedSelections.Instance.OnPlayerLockChanged(cursorLocked);
         }
 
