@@ -34,9 +34,9 @@ namespace ShareDevice
             respawnPrefab = respawnCharacter;
         }
 
-        /// <summary> called after a player has locked individual selection for UiSelectedOnEnable.IsGroupSelect. Such as by PlayeruiMultiSelect's UnityEvent OnLockedForGroupSelection </summary>
+        /// <summary> called after a player has modified their individual selection lock for a UiSelectedOnEnable.IsGroupSelect. Such as by PlayeruiMultiSelect's UnityEvent OnSelectionChanged </summary>
         /// <param name="isLocked"></param>
-        public void OnLockSelection(bool isLocked)
+        public void OnSelectionChanged(bool isLocked)
         {
             if (isLocked && respawnPrefab != null)
             {
