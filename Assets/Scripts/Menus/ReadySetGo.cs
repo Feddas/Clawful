@@ -16,6 +16,13 @@ public class ReadySetGo : MonoBehaviour
     [SerializeField]
     private AnimationCurve Easing = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, -4, 0));
 
+    [Tooltip("If false, players can't move their claws while the sequence is playing.")]
+    [SerializeField]
+    private bool IsClawControllableDuringSequence = false;
+
+    [SerializeField]
+    private UnityEngine.Events.UnityEvent OnSequenceCompleted;
+
     /// <summary> automatically find text that will hold string values </summary>
     private TextMeshProUGUI label
     {
@@ -48,8 +55,9 @@ public class ReadySetGo : MonoBehaviour
     /// <param name="callback"> Action preformed after all words have been shown </param>
     private IEnumerator FadeWordsInSequence()
     {
+        this.transform.localScale = Vector3.zero;
         yield return null; // give a frame for claws to spawn in
-        ClawsControllable(false);
+        ClawsControllable(IsClawControllableDuringSequence);
 
         foreach (string word in words)
         {
@@ -59,6 +67,7 @@ public class ReadySetGo : MonoBehaviour
 
         // finished all words
         label.text = "";
+        OnSequenceCompleted?.Invoke();
         ClawsControllable(true);
     }
 
