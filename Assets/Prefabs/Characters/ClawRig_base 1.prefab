@@ -2763,7 +2763,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9005606833436059938}
-  - component: {fileID: 8349758489181690778}
   - component: {fileID: 5589987044188057456}
   - component: {fileID: 8260835943115751808}
   m_Layer: 12
@@ -2790,60 +2789,6 @@ Transform:
   - {fileID: 2886348732357064419}
   m_Father: {fileID: 8426294472333984571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8349758489181690778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8628953971682916927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: c22e316da7e3185478ef684d154687fc, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 6f3c00c4-353c-49ec-b17e-ecfb91ebc397
-    m_ActionName: PlayerOne/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b85ce991-f5a5-4f12-8ab0-6c53d3c8e980
-    m_ActionName: PlayerOne/ActivateClaw[/Keyboard/leftCtrl,/XInputControllerWindows/buttonWest]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 031752dc-a7c3-4793-a998-0689944207b0
-    m_ActionName: PlayerOne/ChargeClaw[/Keyboard/leftShift,/XInputControllerWindows/rightShoulder]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 4177bd9a-0384-4248-8003-842e4bb62c0b
-    m_ActionName: PlayerMenu/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 48af416b-ee0b-446e-ab32-298ef00acd83
-    m_ActionName: PlayerMenu/Select[/Keyboard/rightCtrl,/XInputControllerWindows/buttonWest]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: eb7b4dc0-d6a7-4b9e-bab9-2e1f05cffa64
-    m_ActionName: PlayerMenu/Deselect[/Keyboard/rightShift,/XInputControllerWindows/rightShoulder]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: PlayerOne
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &5589987044188057456
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ public class ClawScript : MonoBehaviour
 
     private void OnEnable()
     {
-        var playerInput = GetComponent<PlayerInput>();
+        var playerInput = GetComponentInParent<PlayerInput>();
 
         moveAction = playerInput.actions["Move"];
         clawAction = playerInput.actions["ActivateClaw"];
@@ -86,7 +86,7 @@ public class ClawScript : MonoBehaviour
     {
         moveAction.performed -= OnMove;
         moveAction.canceled -= OnMove;
-        //clawAction.performed -= OnActivateClaw;
+        clawAction.performed -= OnActivateClaw;
     }
 
     void FixedUpdate()
