@@ -10,7 +10,11 @@ namespace ShareDevice
         /// <summary> Position where this player will be re/spawned. Move this transform when a checkpoint is reached. </summary>
         public TransformAtIndex Respawn { get; private set; }
 
+        /// <summary> selection the player made </summary>
         private GameObject respawnPrefab;
+
+        /// <summary> players instantiated instance of <seealso cref="respawnPrefab"/>. </summary>
+        private GameObject respawnedAs;
 
         /// <summary> Required <see cref="PlayerInput"/> component invokes this function via UnityEvent when DropPlayer action is triggered. </summary>
         public void OnDropPlayer(InputAction.CallbackContext context)
@@ -40,20 +44,11 @@ namespace ShareDevice
         {
             if (isLocked && respawnPrefab != null)
             {
-                Instantiate(respawnPrefab, this.transform); // lock new selection
+                respawnedAs = Instantiate(respawnPrefab, this.transform); // lock new selection
             }
-            else
+            else if (respawnedAs != null)
             {
-                RemoveCharacterSelection(); // release previous selection
-            }
-        }
-
-        /// <summary> removes the claw character gameobject and all child gameobjects. </summary>
-        private void RemoveCharacterSelection()
-        {
-            foreach (Transform child in this.transform)
-            {
-                GameObject.Destroy(child.gameObject);
+                Destroy(respawnedAs); // remove previous selection.
             }
         }
     }

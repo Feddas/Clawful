@@ -126,9 +126,7 @@ namespace ShareDevice
         /// <summary> Sets whether or not all players are allowed to perform an action to leave the game. Invoked by UnityEvents, such as after a countdown sequence completes. </summary>
         public void SetCanPlayersLeave(bool canLeave)
         {
-            var allPlayers = FindObjectsByType<PlayerUiMultiSelect>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-
-            foreach (PlayerUiMultiSelect player in allPlayers)
+            foreach (PlayerUiMultiSelect player in Players.Manage.UiMultiSelectors)
             {
                 player.SetCanLeaveGame(canLeave, actionToLeave);
             }

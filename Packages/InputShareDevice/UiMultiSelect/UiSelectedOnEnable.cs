@@ -8,9 +8,6 @@ namespace ShareDevice
 {
     public class UiSelectedOnEnable : MonoBehaviour
     {
-        /// <summary> key is playerInput.currentControlScheme. </summary>
-        public static Dictionary<string, UnityEngine.InputSystem.UI.MultiplayerEventSystem> ActiveEventSystems { get; set; } = new Dictionary<string, UnityEngine.InputSystem.UI.MultiplayerEventSystem>();
-
         /// <summary> Most recent enabled instance of UiSelectedOnEnable </summary>
         public static UiSelectedOnEnable ActiveInstance
         {
@@ -26,13 +23,11 @@ namespace ShareDevice
         }
         private static UiSelectedOnEnable activeInstance;
 
-        public static void SetUiInteractable(bool isUiInteractable) // TODO: create some manager gameobject for all players?
+        public static void SetUiInteractable(bool isUiInteractable)
         {
-            var allPlayersEventSystem = FindObjectsByType<UnityEngine.InputSystem.UI.InputSystemUIInputModule>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-
-            foreach (var eventSystem in allPlayersEventSystem)
+            foreach (var uiInputModule in Players.Manage.UiInputModules)
             {
-                eventSystem.enabled = isUiInteractable;
+                uiInputModule.enabled = isUiInteractable;
             }
         }
 
@@ -64,6 +59,12 @@ namespace ShareDevice
             activeInstance = this;
             SetUiInteractable(true);
             ForceSelection();
+            // TODO Players.Manage.OnUiPanelOpened(IsGroupSelect);   REMOVE PlayerUiMultiSelect.cs OnEnable()'s this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
+        }
+
+        private void OnDisable()
+        {
+            Players.Manage.OnUiPanelClosed();
         }
 
         private void Update()
@@ -74,10 +75,10 @@ namespace ShareDevice
         private void ForceSelection()
         {
             // Each EventSystem should always have a UI element selected. Otherwise navigation can't work.
-            foreach (var eventSystem in ActiveEventSystems
-                .Where(d => d.Value.currentSelectedGameObject == null || false == d.Value.currentSelectedGameObject.activeInHierarchy))
+            foreach (var eventSystem in Players.Manage.EventSystems
+                .Where(d => d.currentSelectedGameObject == null || false == d.currentSelectedGameObject.activeInHierarchy))
             {
-                eventSystem.Value.SetSelectedGameObject(FirstSelected.gameObject);
+                eventSystem.SetSelectedGameObject(FirstSelected.gameObject);
             }
         }
     }

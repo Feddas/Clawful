@@ -63,7 +63,7 @@ namespace ShareDevice
         }
         private PlayerInput _playerInput;
 
-        private MultiplayerEventSystem eventSystem
+        public MultiplayerEventSystem EventSystem
         {
             get
             {
@@ -72,7 +72,7 @@ namespace ShareDevice
         }
         private MultiplayerEventSystem _eventSystem;
 
-        private InputSystemUIInputModule uiInput
+        public InputSystemUIInputModule UiInput
         {
             get
             {
@@ -94,19 +94,19 @@ namespace ShareDevice
 
             // Cache uiInput.move so that it can be temporarily nulled
             // alternative: remove this device from the Navigate InputAction. Shawn couldn't get that to work https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/ActionBindings.html#choosing-which-devices-to-use / https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html#UnityEngine_InputSystem_InputAction_bindingMask
-            navigate = uiInput.move;
+            navigate = UiInput.move;
         }
 
         public void OnEnable()
         {
             controlScheme ??= playerInput.currentControlScheme;
-            UiSelectedOnEnable.ActiveEventSystems.Add(controlScheme, eventSystem);
+            Players.Manage.Add(controlScheme, this);
             this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
         }
 
         public void OnDisable()
         {
-            UiSelectedOnEnable.ActiveEventSystems.Remove(controlScheme);
+            Players.Manage.Remove(controlScheme);
         }
 
         /// <summary> Sets whether or not this player can perform an action to leave the game. </summary>
@@ -187,16 +187,16 @@ namespace ShareDevice
             }
 
             // In "IsGroupSelect" mode. toggle lock of this players EventSystem to the current UI
-            if (uiInput.move == null) // disable lock
+            if (UiInput.move == null) // disable lock
             {
                 cursorLocked = false;
-                uiInput.move = navigate;
+                UiInput.move = navigate;
                 cursorClone.sprite = Hover;
             }
             else // enable lock
             {
                 cursorLocked = true;
-                uiInput.move = null;
+                UiInput.move = null;
                 cursorClone.sprite = Select;
             }
 
@@ -222,11 +222,11 @@ namespace ShareDevice
             // manage Cursor clones
             if (cursorClone != null)
             {
-                cursorClone.transform.SetParent(eventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
+                cursorClone.transform.SetParent(EventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
             }
-            else if (eventSystem.currentSelectedGameObject != null)
+            else if (EventSystem.currentSelectedGameObject != null)
             {
-                cursorClone = Instantiate<Image>(Cursor, eventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
+                cursorClone = Instantiate<Image>(Cursor, EventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
             }
         }
     }
