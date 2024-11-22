@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 ////TODO: support multi-object editing
 
-namespace InputShareDevice
+namespace ShareDevice
 {
     /// <summary>
     /// A custom inspector for <see cref="UiRebindAction"/> which provides a more convenient way for

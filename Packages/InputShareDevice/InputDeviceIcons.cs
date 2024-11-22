@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 ////TODO: have updateBindingUIEvent receive a control path string, too (in addition to the device layout name)
 
-namespace InputShareDevice
+namespace ShareDevice
 {
     /// <summary>
     /// This is an example for how to override the default display behavior of bindings. The component

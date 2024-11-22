@@ -1,7 +1,7 @@
 {
   "name": "net.featherly.shawn.inputsharedevice",
-  "displayName": "Input Share Device",
-  "version": "0.0.2",
+  "displayName": "Share InputSystem Device",
+  "version": "0.0.3",
   "unity": "2022.3",
   "category": "",
   "description": "UnityEngine.InputSystem extensions for sharing a single device with multiple players, prebuilt UI for rebinding actions, and multiple players selecting UI from a single canvas. Rebinding combines UnityEngine.InputSystem.Samples.RebindUI , Sasquatch B https://youtu.be/qXbjyzBlduY , Samyam https://youtu.be/csqVa2Vimao",

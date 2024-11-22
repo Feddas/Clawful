@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace InputShareDevice
+namespace ShareDevice
 {
     public class UiSelectedOnEnable : MonoBehaviour
     {
@@ -18,12 +18,23 @@ namespace InputShareDevice
             {
                 if (activeInstance == null)
                 {
-                    throw new System.Exception("There are no active instances of UiSelectedOnEnable on any gameobjects. PlayerUiMultiSelect needs an active UiSelectedOnEnable on a canvas to support multiple players selecting UI.");
+                    SetUiInteractable(false);
+                    Debug.LogWarning("Players ability to interact with UI has been disabled. There are no active instances of UiSelectedOnEnable on any gameobjects. PlayerUiMultiSelect needs an active UiSelectedOnEnable on a canvas to support multiple players selecting UI.");
                 }
                 return activeInstance;
             }
         }
         private static UiSelectedOnEnable activeInstance;
+
+        public static void SetUiInteractable(bool isUiInteractable) // TODO: create some manager gameobject for all players?
+        {
+            var allPlayersEventSystem = FindObjectsByType<UnityEngine.InputSystem.UI.InputSystemUIInputModule>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            foreach (var eventSystem in allPlayersEventSystem)
+            {
+                eventSystem.enabled = isUiInteractable;
+            }
+        }
 
         /// <summary> If true, wait for all active eventsystems to lock a selection. If false, first eventsytem that selects a submission activates it for everyone. </summary>
         public bool IsGroupSelect { get { return isGroupSelect; } }
@@ -45,12 +56,13 @@ namespace InputShareDevice
         public void InvokeGroupSelect(bool isLocked)
         {
             // Debug.Log($"{Time.frameCount} {(isLocked ? "everyone locked" : "lock broken")}. count {ShareDevice.LockedSelections.Instance.LockCount}.");
-            OnGroupSelect.Invoke(isLocked);   // TODO: start/stop a 3 second count down timer before loading game scene.
+            OnGroupSelect.Invoke(isLocked);
         }
 
         private void OnEnable()
         {
             activeInstance = this;
+            SetUiInteractable(true);
             ForceSelection();
         }
 
