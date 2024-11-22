@@ -37,6 +37,10 @@ namespace ShareDevice
         [SerializeField]
         private InputActionReference actionToJoin;
 
+        [Tooltip("Buttons available to press for a player to leave. Each control scheme should only have one button for this action. Composite actions will not work.")]
+        [SerializeField]
+        private InputActionReference actionToLeave;
+
         [Tooltip("PlayerInput prefab that will be instantiated on join.")]
         [SerializeField]
         private GameObject playerPrefab;
@@ -119,6 +123,17 @@ namespace ShareDevice
             }
         }
 
+        /// <summary> Sets whether or not all players are allowed to perform an action to leave the game. Invoked by UnityEvents, such as after a countdown sequence completes. </summary>
+        public void SetCanPlayersLeave(bool canLeave)
+        {
+            var allPlayers = FindObjectsByType<PlayerUiMultiSelect>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            foreach (PlayerUiMultiSelect player in allPlayers)
+            {
+                player.SetCanLeaveGame(canLeave, actionToLeave);
+            }
+        }
+
         /// <summary> This must be called from <see cref="PlayerInputManager"/> due to <see cref="PlayerInput"/> having a hard reference in OnDisable `PlayerInputManager.instance?.NotifyPlayerLeft(this);`
         /// https://github.com/Unity-Technologies/InputSystem/blob/develop/Packages/com.unity.inputsystem/InputSystem/Plugins/PlayerInput/PlayerInput.cs#L1746
         /// </summary>
@@ -136,7 +151,7 @@ namespace ShareDevice
             // mark their spawn position as freed
             var spawnPlayer = player.GetComponent<PlayerInputRespawn>();
             spawnPositionsAvailable[spawnPlayer.Respawn.Index] = spawnPlayer.Respawn.Transform;
-            Debug.Log(player.name + " freed up spawn " + spawnPlayer.name);
+            Debug.Log("Player Left " + player.name + " freed up spawn " + spawnPlayer.name);
         }
 
         private void addPlayer(InputControl thatPressed)
@@ -169,7 +184,7 @@ namespace ShareDevice
             // setup player
             playerInput.gameObject.name = "Player" + playerInput.playerIndex + playerInput.currentControlScheme;
             playerInput.GetComponent<PlayerInputRespawn>().SetPosition(spawnPosition);
-            Debug.Log(playerInput.name + " using spawn " + spawnPosition.Transform.name);
+            Debug.Log("Player Joined " + playerInput.name + " using spawn " + spawnPosition.Transform.name);
 
             // DebugPlayersConnected();
         }

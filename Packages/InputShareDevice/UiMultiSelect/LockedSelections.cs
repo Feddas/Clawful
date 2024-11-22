@@ -1,4 +1,4 @@
-using InputShareDevice;
+using ShareDevice;
 
 namespace ShareDevice
 {

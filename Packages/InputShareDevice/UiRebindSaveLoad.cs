@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace InputShareDevice
+namespace ShareDevice
 {
     /// <summary> copied from https://www.youtube.com/watch?v=csqVa2Vimao&t=1970s </summary>
     public class UiRebindSaveLoad : MonoBehaviour

@@ -1,4 +1,4 @@
-using InputShareDevice;
+using ShareDevice;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -44,7 +44,8 @@ namespace ShareDevice
         /// <summary> Navigation will be toggled when the player submits or retracts a selection. </summary>
         private InputActionReference navigate;
 
-        private double timeCreated;
+        /// <summary> clone of Cursor sent to active UI. cursorClone will be destroyed when the UI is destroyed. </summary>
+        private Image cursorClone;
 
         /// <summary> Support up to 4 players. These pivots ensure cursor images don't overlap with one another. </summary>
         private Vector2[] cursorPivot = new Vector2[4] {
@@ -94,8 +95,6 @@ namespace ShareDevice
             // Cache uiInput.move so that it can be temporarily nulled
             // alternative: remove this device from the Navigate InputAction. Shawn couldn't get that to work https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/ActionBindings.html#choosing-which-devices-to-use / https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html#UnityEngine_InputSystem_InputAction_bindingMask
             navigate = uiInput.move;
-
-            timeCreated = Time.realtimeSinceStartup;
         }
 
         public void OnEnable()
@@ -110,12 +109,37 @@ namespace ShareDevice
             UiSelectedOnEnable.ActiveEventSystems.Remove(controlScheme);
         }
 
+        /// <summary> Sets whether or not this player can perform an action to leave the game. </summary>
+        public void SetCanLeaveGame(bool canLeave, InputActionReference mapToLeave)
+        {
+            var actionToLeave = playerInput.actions[mapToLeave.name];
+            if (canLeave)
+            {
+                actionToLeave.Enable();
+            }
+            else
+            {
+                actionToLeave.Disable();
+            }
+        }
+
         /// <summary> Required <see cref="PlayerInput"/> component invokes this function via UnityEvent when LeaveGame action is triggered. </summary>
         public void OnLeaveGame(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                Destroy(Cursor.gameObject);
+                // force unlock
+                if (cursorLocked)
+                {
+                    cursorLocked = false;
+                    NotifyLockChanged();
+                }
+
+                // remove players objects
+                if (cursorClone != null)
+                {
+                    Destroy(cursorClone.gameObject);
+                }
                 Destroy(gameObject);
                 // TODO: check if "PlayerInputManager" can (or should) be re-enabled so that a new player can rejoin
             }
@@ -126,7 +150,7 @@ namespace ShareDevice
         public void OnSubmit(InputAction.CallbackContext context)
         {
             if (context.phase != InputActionPhase.Performed
-                || timeCreated == 0) // ignore submit actions triggered at the same time  player joined and was instantiated.
+                || navigate == null) // navigate is set only after Start() is called. Use that fact to ignore submit actions triggered in the same frame player instantiated from joining.
             {
                 return;
             }
@@ -156,24 +180,31 @@ namespace ShareDevice
             IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect; // Set by UiSelectedOnEnable.ActiveInstance's OnEnable
             yield return FrameAfterNavigate(); // update cursor position
 
-            // toggle lock of this players EventSystem to the current UI
-            if (false == lastGroupSelect) // don't toggle anything
+            if (false == lastGroupSelect // Not in "IsGroupSelect" mode. don't toggle anything
+                || cursorClone == null)  // in invalid state. likely no UiSelectedOnEnable.ActiveInstance
             {
                 yield break;
             }
+
+            // In "IsGroupSelect" mode. toggle lock of this players EventSystem to the current UI
             if (uiInput.move == null) // disable lock
             {
                 cursorLocked = false;
                 uiInput.move = navigate;
-                Cursor.sprite = Hover;
+                cursorClone.sprite = Hover;
             }
             else // enable lock
             {
                 cursorLocked = true;
                 uiInput.move = null;
-                Cursor.sprite = Select;
+                cursorClone.sprite = Select;
             }
 
+            NotifyLockChanged();
+        }
+
+        private void NotifyLockChanged()
+        {
             // update the players individual selection
             OnSelectionChanged?.Invoke(cursorLocked);
 
@@ -187,7 +218,16 @@ namespace ShareDevice
             yield return null;
 
             // Debug.Log(this.name + " selected " + eventSystem.currentSelectedGameObject.name + ". location" + eventSystem.currentSelectedGameObject.transform.position);
-            Cursor.transform.SetParent(eventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
+
+            // manage Cursor clones
+            if (cursorClone != null)
+            {
+                cursorClone.transform.SetParent(eventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
+            }
+            else if (eventSystem.currentSelectedGameObject != null)
+            {
+                cursorClone = Instantiate<Image>(Cursor, eventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
+            }
         }
     }
 }
