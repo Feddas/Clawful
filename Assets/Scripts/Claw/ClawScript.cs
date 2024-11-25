@@ -21,7 +21,7 @@ public class ClawScript : MonoBehaviour
     //middle of rope reference
     public GameObject middleRope;
     private DistanceJoint2D jointOne;
-    private  DistanceJoint2D jointTwo;
+    private DistanceJoint2D jointTwo;
 
     public Vector2 moveInput;
     private Rigidbody2D rb;
@@ -45,7 +45,7 @@ public class ClawScript : MonoBehaviour
     public float chargeDRate = 0.5f;
     public float maxChargeDistance = 3f;
 
-    [Header ("Claw Reference")]
+    [Header("Claw Reference")]
     public List<ClawArmScript> claws;
 
     void Awake()
@@ -119,7 +119,8 @@ public class ClawScript : MonoBehaviour
 
     private void DetectDoubleTap(Vector2 input)
     {
-        if (canFunction)
+        if (canFunction
+            && moveInput == Vector2.zero) // make sure this is a naw tap. when moveInput is 0, the previous movement was released.
         {
             if (input.x < 0) // Left movement key pressed
             {
@@ -151,7 +152,7 @@ public class ClawScript : MonoBehaviour
 
     private void Move()
     {
-        Vector2 targetVelocity = new Vector2 (moveInput.x * speed, 0);
+        Vector2 targetVelocity = new Vector2(moveInput.x * speed, 0);
         rb.AddForce(targetVelocity * rb.mass, ForceMode2D.Force);
     }
 

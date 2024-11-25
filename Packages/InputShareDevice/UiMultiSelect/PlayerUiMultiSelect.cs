@@ -81,8 +81,8 @@ namespace ShareDevice
         }
         private InputSystemUIInputModule _uiInput;
 
-        /// <summary> cache playerInput.currentControlScheme to handle playerInput being destroyed before this. </summary>
-        private string controlScheme;
+        /// <summary> Uniquely identifies players using either multiple devices (gamepads) or multiple players having controlschemes on a device (2 on 1 keyboard). This value needs to be cached to handle playerInput being destroyed before this component. </summary>
+        private string playerId;
 
         public void Start()
         {
@@ -99,14 +99,14 @@ namespace ShareDevice
 
         public void OnEnable()
         {
-            controlScheme ??= playerInput.currentControlScheme;
-            Players.Manage.Add(controlScheme, this);
+            playerId ??= playerInput.devices[0].name + ":" + playerInput.currentControlScheme;
+            Players.Manage.Add(playerId, this);
             this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
         }
 
         public void OnDisable()
         {
-            Players.Manage.Remove(controlScheme);
+            Players.Manage.Remove(playerId);
         }
 
         /// <summary> Sets whether or not this player can perform an action to leave the game. </summary>
