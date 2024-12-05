@@ -1,10 +1,11 @@
 {
   "name": "net.featherly.shawn.inputsharedevice",
+  "version": "0.0.4",
   "displayName": "Share InputSystem Device",
-  "version": "0.0.3",
+  "description": "UnityEngine.InputSystem extensions for:\n1. Sharing a single device with multiple players (2 players, 1 keyboard). \n2. Multiple players selecting UI from a single canvas. \n3. TextMeshPro based UI prefab for rebinding actions. \n\nRebinding combines UnityEngine.InputSystem.Samples.RebindUI , Sasquatch B https://youtu.be/qXbjyzBlduY , & Samyam https://youtu.be/csqVa2Vimao",
   "unity": "2022.3",
-  "category": "",
-  "description": "UnityEngine.InputSystem extensions for sharing a single device with multiple players, prebuilt UI for rebinding actions, and multiple players selecting UI from a single canvas. Rebinding combines UnityEngine.InputSystem.Samples.RebindUI , Sasquatch B https://youtu.be/qXbjyzBlduY , Samyam https://youtu.be/csqVa2Vimao",
+  "documentationUrl": "https://u3d.as/3pzb",
+  "author": "ShawnFeatherly <> (https://shawn.featherly.net)",
   "dependencies": {
     "com.unity.inputsystem": "1.7.0",
     "com.unity.textmeshpro": "3.0.6"

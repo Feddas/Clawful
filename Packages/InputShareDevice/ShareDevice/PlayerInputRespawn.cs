@@ -39,16 +39,28 @@ namespace ShareDevice
         }
 
         /// <summary> called after a player has modified their individual selection lock for a UiSelectedOnEnable.IsGroupSelect. Such as by PlayeruiMultiSelect's UnityEvent OnSelectionChanged </summary>
-        /// <param name="isLocked"></param>
+        /// <param name="isLocked"> The player has locked in their selection. When true, it is assumed this players cursor can NOT move to a different selection. </param>
         public void OnSelectionChanged(bool isLocked)
         {
-            if (isLocked && respawnPrefab != null)
+            if (isLocked)
             {
-                respawnedAs = Instantiate(respawnPrefab, this.transform); // lock new selection
+                DoRespawn();
             }
-            else if (respawnedAs != null)
+            else if (respawnedAs != null) // selection no longer locked, but player still has a prefab selection spawned
             {
-                Destroy(respawnedAs); // remove previous selection.
+                Destroy(respawnedAs);
+            }
+        }
+
+        public void DoRespawn()
+        {
+            if (respawnedAs != null) // remove previous selection.
+            {
+                Destroy(respawnedAs);
+            }
+            if (respawnPrefab != null) // lock new selection
+            {
+                respawnedAs = Instantiate(respawnPrefab, this.transform);
             }
         }
     }

@@ -32,10 +32,20 @@ namespace ShareDevice
             }
 
             // copy binding path from sourceAction
-            InputBinding sourceBinding = sourceAction.actionReference.action.bindings[bindingIndex];
-            string targetOverridePath = sourceBinding.overridePath;
+            var bindings = sourceAction.actionReference.action.bindings;
             intoAction.action.Disable();
-            intoAction.action.ApplyBindingOverride(bindingIndex, targetOverridePath);
+            if (bindings[bindingIndex].isComposite) // copy overrides from part bindings.
+            {
+                for (var i = bindingIndex + 1; i < bindings.Count && bindings[i].isPartOfComposite && bindings[i].hasOverrides; ++i)
+                {
+                    intoAction.action.ApplyBindingOverride(i, bindings[i].overridePath);
+                }
+            }
+            else // copy overrides from single binding, for a button.
+            {
+                string targetOverridePath = bindings[bindingIndex].overridePath;
+                intoAction.action.ApplyBindingOverride(bindingIndex, targetOverridePath);
+            }
             intoAction.action.Enable();
         }
     }

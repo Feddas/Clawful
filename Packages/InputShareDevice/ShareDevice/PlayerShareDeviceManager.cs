@@ -181,7 +181,12 @@ namespace ShareDevice
 
             // setup player
             playerInput.gameObject.name = "Player" + playerInput.playerIndex + playerInput.currentControlScheme;
-            playerInput.GetComponent<PlayerInputRespawn>().SetPosition(spawnPosition);
+            var playerRespawn = playerInput.GetComponent<PlayerInputRespawn>();
+            if (playerRespawn == null)
+            {
+                playerRespawn = gameObject.AddComponent<PlayerInputRespawn>();
+            }
+            playerRespawn.SetPosition(spawnPosition);
             Debug.Log("Player Joined " + playerInput.name + " using spawn " + spawnPosition.Transform.name);
 
             // DebugPlayersConnected();

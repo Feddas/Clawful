@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 ////TODO: localization support
 
@@ -40,8 +40,11 @@ namespace ShareDevice
             get => m_BindingId;
             set
             {
-                m_BindingId = value;
-                UpdateBindingDisplay();
+                if (m_BindingId != value)
+                {
+                    m_BindingId = value;
+                    UpdateBindingDisplay();
+                }
             }
         }
 
@@ -211,14 +214,18 @@ namespace ShareDevice
             var controlPath = default(string);
 
             // Get display string from action.
-            var action = m_Action?.action;
+            var action = UseBindingAssetNotPlayerIndex
+                ? actionReference?.action
+                : PlayerInput.all[m_PlayerIndex].actions[actionReference.name];
+
             if (action != null)
             {
                 var bindingIndex = action.bindings.IndexOf(x => x.id.ToString() == m_BindingId);
                 if (bindingIndex != -1)
                 {
                     displayString = action.GetBindingDisplayString(bindingIndex, out deviceLayoutName, out controlPath, displayStringOptions);
-                    hasOverrides = action.bindings[bindingIndex].hasOverrides;
+                    hasOverrides = action.bindings[bindingIndex].hasOverrides
+                        || bindingsInComposite(action, bindingIndex).Any(b => b.hasOverrides);
                 }
             }
 
@@ -435,6 +442,17 @@ namespace ShareDevice
             return false;
         }
 
+        /// <summary> If binding at <paramref name="bindingIndex"/> is a composite, return all bindings that belong to that composite.
+        /// TODO: Make this an extension method for action.bindings </summary>
+        private IEnumerable<InputBinding> bindingsInComposite(InputAction action, int bindingIndex)
+        {
+            if (false == action.bindings[bindingIndex].isComposite)
+                yield break;
+
+            for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
+                yield return action.bindings[i];
+        }
+
         protected void OnEnable()
         {
             if (m_InputDeviceIcons != null)
@@ -446,6 +464,15 @@ namespace ShareDevice
             s_RebindActionUIs.Add(this);
             if (s_RebindActionUIs.Count == 1)
                 InputSystem.onActionChange += OnActionChange;
+
+            // Use PlayerIndex (Not BindingAsset). overwrites m_binding using PlayerIndex
+            if (false == UseBindingAssetNotPlayerIndex && PlayerInput.all.Count > m_PlayerIndex)
+            {
+                var playersAction = PlayerInput.all[m_PlayerIndex].actions[actionReference.name];
+                var bindingIndex = playersAction.GetBindingIndexForControl(playersAction.controls[0]);
+                if (playersAction.bindings[bindingIndex].isPartOfComposite) bindingIndex--; // workaround for bug in Unity's code. composite indices are 1 too big
+                bindingId = playersAction.bindings[bindingIndex].id.ToString();
+            }
         }
 
         protected void OnDisable()
@@ -491,6 +518,14 @@ namespace ShareDevice
         [Tooltip("Reference to action that is to be rebound from the UI.")]
         [SerializeField]
         private InputActionReference m_Action;
+
+        [Tooltip("How the binding should be located, either by binding asset Id or with the index of a playerInput at runtime")]
+        [SerializeField]
+        public bool UseBindingAssetNotPlayerIndex = true;
+
+        [Tooltip("Which player to rebind controls based off a player. Player is found at runtime, in PlayerInput.all[]. index is based off order player joined.")]
+        [SerializeField]
+        private int m_PlayerIndex;
 
         [SerializeField]
         private string m_BindingId;

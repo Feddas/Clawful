@@ -83,8 +83,9 @@ namespace ShareDevice
 
         /// <summary> Uniquely identifies players using either multiple devices (gamepads) or multiple players having controlschemes on a device (2 on 1 keyboard). This value needs to be cached to handle playerInput being destroyed before this component. </summary>
         private string playerId;
+        private int frameCreated;
 
-        public void Start()
+        public void Awake()
         {
             // customize cursor icon for each player
             Cursor.sprite = Hover;
@@ -92,16 +93,19 @@ namespace ShareDevice
             var cursorRect = Cursor.GetComponent<RectTransform>();
             cursorRect.pivot = cursorPivot[playerInput.playerIndex];
 
+            // If UiSelectedOnEnable has ActiveInstance show cursor
+            ShowCursor();
+
             // Cache uiInput.move so that it can be temporarily nulled
             // alternative: remove this device from the Navigate InputAction. Shawn couldn't get that to work https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/ActionBindings.html#choosing-which-devices-to-use / https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html#UnityEngine_InputSystem_InputAction_bindingMask
             navigate = UiInput.move;
+            frameCreated = Time.frameCount;
         }
 
         public void OnEnable()
         {
             playerId ??= playerInput.devices[0].name + ":" + playerInput.currentControlScheme;
             Players.Manage.Add(playerId, this);
-            this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
         }
 
         public void OnDisable()
@@ -150,12 +154,12 @@ namespace ShareDevice
         public void OnSubmit(InputAction.CallbackContext context)
         {
             if (context.phase != InputActionPhase.Performed
-                || navigate == null) // navigate is set only after Start() is called. Use that fact to ignore submit actions triggered in the same frame player instantiated from joining.
+                || frameCreated == Time.frameCount) // ignore submit actions triggered in the same frame player instantiated from joining.
             {
                 return;
             }
 
-            StartCoroutine(FrameAfterSubmit());
+            StartCoroutine(FrameAfterSubmit(this.IsGroupSelect)); // cache this panels.IsGroupSelect to handle UiSelectedOnEnable.ActiveInstance's OnEnable overwriting this.IsGroupSelect with new panel.
         }
 
         /// <summary> Occurs when player has moved, navigating the UI.
@@ -170,35 +174,40 @@ namespace ShareDevice
             StartCoroutine(FrameAfterNavigate());
         }
 
-        /// <summary> When OnSubmit is called UiSelectedOnEnable.ActiveInstance could be calling OnEnable the same frame. After a frame, UiSelectedOnEnable.ActiveInstance will be enabled. </summary>
-        private IEnumerator FrameAfterSubmit()
+        /// <summary> Set if this players EventSystem allows them to move off of the current UI element </summary>
+        public void SetCursorLock(bool isLocked)
         {
-            yield return null;
+            // set cursor properties
+            cursorLocked = isLocked;
+            if (navigate != null) // else, this.Awake() hasn't been called yet
+            {
+                UiInput.move = isLocked ? null : navigate;
+            }
 
-            // update IsGroupSelect and visual cursor
-            bool lastGroupSelect = IsGroupSelect;
-            IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect; // Set by UiSelectedOnEnable.ActiveInstance's OnEnable
-            yield return FrameAfterNavigate(); // update cursor position
+            // set cursor visuals
+            if (cursorClone == null)
+            {
+                ShowCursor();
+            }
+            cursorClone.sprite = isLocked ? Select : Hover;
+        }
 
-            if (false == lastGroupSelect // Not in "IsGroupSelect" mode. don't toggle anything
+        /// <summary> When OnSubmit is called UiSelectedOnEnable.ActiveInstance could be calling OnEnable the same frame. After a frame, UiSelectedOnEnable.ActiveInstance will be enabled. </summary>
+        /// <param name="groupSelectBeforeSubmit"> Status of <seealso cref="IsGroupSelect"/> when the submit occurred. <seealso cref="IsGroupSelect"/> can change every time a new UiSelectedOnEnable panel is opened.  </param>
+        private IEnumerator FrameAfterSubmit(bool groupSelectBeforeSubmit)
+        {
+            yield return null; // ensure it's FrameAfterSubmit
+
+            ShowCursor(); // incase submit action left the cursor on a previous UI panel
+
+            if (false == groupSelectBeforeSubmit // Not in "IsGroupSelect" mode. don't toggle anything
                 || cursorClone == null)  // in invalid state. likely no UiSelectedOnEnable.ActiveInstance
             {
-                yield break;
+                yield break; // not in "IsGroupSelect" mode
             }
 
-            // In "IsGroupSelect" mode. toggle lock of this players EventSystem to the current UI
-            if (UiInput.move == null) // disable lock
-            {
-                cursorLocked = false;
-                UiInput.move = navigate;
-                cursorClone.sprite = Hover;
-            }
-            else // enable lock
-            {
-                cursorLocked = true;
-                UiInput.move = null;
-                cursorClone.sprite = Select;
-            }
+            // In "IsGroupSelect" mode
+            SetCursorLock(UiInput.move != null); // use UiInput.move to determine what state to toggle into
 
             NotifyLockChanged();
         }
@@ -215,17 +224,26 @@ namespace ShareDevice
         /// <summary> When OnNavigate is called EventSystem.CurrentSelectedGameObject hasn't been updated yet. After a frame, it will be updated. </summary>
         private IEnumerator FrameAfterNavigate()
         {
-            yield return null;
+            yield return null; // ensure it's FrameAfterNavigate
 
             // Debug.Log(this.name + " selected " + eventSystem.currentSelectedGameObject.name + ". location" + eventSystem.currentSelectedGameObject.transform.position);
 
-            // manage Cursor clones
+            ShowCursor();
+        }
+
+        /// <summary> Moves the cursor from any previous panel to the UI element that is currently in focus. </summary>
+        private void ShowCursor()
+        {
             if (cursorClone != null)
             {
                 cursorClone.transform.SetParent(EventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
             }
-            else if (EventSystem.currentSelectedGameObject != null)
-            {
+            else if (UiSelectedOnEnable.ActiveInstance != null) // player was created this frame and should be joined to an already existing UI panel
+            {                                                   // or cursorClone was destroyed by changing scenes
+                if (EventSystem.currentSelectedGameObject == null)
+                {
+                    EventSystem.SetSelectedGameObject(UiSelectedOnEnable.ActiveInstance.GetFirstSelected());
+                }
                 cursorClone = Instantiate<Image>(Cursor, EventSystem.currentSelectedGameObject.transform, worldPositionStays: false);
             }
         }

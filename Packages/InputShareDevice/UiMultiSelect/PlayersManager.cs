@@ -42,9 +42,15 @@ namespace ShareDevice
             }
         }
 
-        public void Add(string key, PlayerUiMultiSelect value)
+        public void Add(string key, PlayerUiMultiSelect player)
         {
-            Active.Add(key, value);
+            Active.Add(key, player);
+
+            /// late add player to already opened <seealso cref="OnUiPanelOpened(bool)"/>
+            if (UiSelectedOnEnable.ActiveInstance != null)
+            {
+                SetupPlayer(player, UiSelectedOnEnable.ActiveInstance.IsGroupSelect);
+            }
         }
 
         public void Remove(string key)
@@ -52,14 +58,14 @@ namespace ShareDevice
             Active.Remove(key);
         }
 
-        /// <summary> Setup after a new UiSelectedOnEnable.cs panel has opened </summary>
-        //public void OnUiPanelOpened(bool isGroupSelect)
-        //{
-        //    foreach (var player in Active.Values)
-        //    {
-        //        player.IsGroupSelect = isGroupSelect;
-        //    }
-        //}
+        /// <summary> Setup a newly opened UiSelectedOnEnable.cs panel for already existing players </summary>
+        public void OnUiPanelOpened(bool isGroupSelect)
+        {
+            foreach (var player in Active.Values)
+            {
+                SetupPlayer(player, isGroupSelect);
+            }
+        }
 
         /// <summary> Cleanup after a UiSelectedOnEnable.cs panel has closed </summary>
         public void OnUiPanelClosed()
@@ -68,6 +74,12 @@ namespace ShareDevice
             {
                 player.IsGroupSelect = false;
             }
+        }
+
+        private void SetupPlayer(PlayerUiMultiSelect player, bool isGroupSelect)
+        {
+            player.IsGroupSelect = isGroupSelect;
+            player.SetCursorLock(false);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace ShareDevice
         }
         private static UiSelectedOnEnable activeInstance;
 
+        /// <summary> Change all players ability to interact with UI. Does this by setting enabled of all InputSystemUIInputModules. </summary>
         public static void SetUiInteractable(bool isUiInteractable)
         {
             foreach (var uiInputModule in Players.Manage.UiInputModules)
@@ -54,12 +55,17 @@ namespace ShareDevice
             OnGroupSelect.Invoke(isLocked);
         }
 
+        public GameObject GetFirstSelected()
+        {
+            return FirstSelected.gameObject;
+        }
+
         private void OnEnable()
         {
             activeInstance = this;
             SetUiInteractable(true);
             ForceSelection();
-            // TODO Players.Manage.OnUiPanelOpened(IsGroupSelect);   REMOVE PlayerUiMultiSelect.cs OnEnable()'s this.IsGroupSelect = UiSelectedOnEnable.ActiveInstance.IsGroupSelect;
+            Players.Manage.OnUiPanelOpened(IsGroupSelect);
         }
 
         private void OnDisable()

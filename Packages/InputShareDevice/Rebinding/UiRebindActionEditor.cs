@@ -18,6 +18,7 @@ namespace ShareDevice
         protected void OnEnable()
         {
             m_ActionProperty = serializedObject.FindProperty("m_Action");
+            m_PlayerIndexProperty = serializedObject.FindProperty("m_PlayerIndex");
             m_BindingIdProperty = serializedObject.FindProperty("m_BindingId");
             m_ActionLabelProperty = serializedObject.FindProperty("m_ActionLabel");
             m_BindingTextProperty = serializedObject.FindProperty("m_BindingText");
@@ -37,18 +38,23 @@ namespace ShareDevice
         {
             EditorGUI.BeginChangeCheck();
 
+            var uiRebindActionComponent = target as UiRebindAction;
+
             // Binding section.
             EditorGUILayout.LabelField(m_BindingLabel, Styles.boldLabel);
             using (new EditorGUI.IndentLevelScope())
             {
                 EditorGUILayout.PropertyField(m_ActionProperty);
 
-                var newSelectedBinding = EditorGUILayout.Popup(m_BindingLabel, m_SelectedBindingOption, m_BindingOptions);
-                if (newSelectedBinding != m_SelectedBindingOption)
+                // Toggle visibility between fields; PlayerIndex and Binding
+                uiRebindActionComponent.UseBindingAssetNotPlayerIndex = EditorGUILayout.Toggle("UseBindingAsset", uiRebindActionComponent.UseBindingAssetNotPlayerIndex);
+                if (uiRebindActionComponent.UseBindingAssetNotPlayerIndex)
                 {
-                    var bindingId = m_BindingOptionValues[newSelectedBinding];
-                    m_BindingIdProperty.stringValue = bindingId;
-                    m_SelectedBindingOption = newSelectedBinding;
+                    LayoutBindingAssetsPopup();
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(m_PlayerIndexProperty);
                 }
 
                 var optionsOld = (InputBinding.DisplayStringOptions)m_DisplayStringOptionsProperty.intValue;
@@ -84,6 +90,18 @@ namespace ShareDevice
             {
                 serializedObject.ApplyModifiedProperties();
                 RefreshBindingOptions();
+            }
+        }
+
+        /// <summary> Show inspector popup field for "Binding" </summary>
+        private void LayoutBindingAssetsPopup()
+        {
+            var newSelectedBinding = EditorGUILayout.Popup(m_BindingLabel, m_SelectedBindingOption, m_BindingOptions);
+            if (newSelectedBinding != m_SelectedBindingOption)
+            {
+                var bindingId = m_BindingOptionValues[newSelectedBinding];
+                m_BindingIdProperty.stringValue = bindingId;
+                m_SelectedBindingOption = newSelectedBinding;
             }
         }
 
@@ -156,6 +174,7 @@ namespace ShareDevice
         }
 
         private SerializedProperty m_ActionProperty;
+        private SerializedProperty m_PlayerIndexProperty;
         private SerializedProperty m_BindingIdProperty;
         private SerializedProperty m_ActionLabelProperty;
         private SerializedProperty m_BindingTextProperty;
