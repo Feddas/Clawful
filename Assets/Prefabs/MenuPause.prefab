@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'EXIT
+  m_text: 'EXIT TO DESKTOP
 
 '
   m_isRightToLeft: 0
@@ -170,7 +170,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -45}
+  m_AnchoredPosition: {x: 150, y: -33.75}
   m_SizeDelta: {x: 180, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6923527447164089315
@@ -585,8 +585,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -195}
-  m_SizeDelta: {x: 180, y: 30}
+  m_AnchoredPosition: {x: 150, y: -183.75}
+  m_SizeDelta: {x: 180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5640596709362628889
 CanvasRenderer:
@@ -643,8 +643,8 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 8706875170188769388}
     m_SelectOnDown: {fileID: 6747903134643665939}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 8706875170188769388}
+    m_SelectOnRight: {fileID: 6747903134643665939}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -711,6 +711,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1288426676127164076}
   - {fileID: 3748944900935509337}
   - {fileID: 3229648675032974456}
   - {fileID: 5773433830866613693}
@@ -915,7 +916,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2625915498821597748}
-  m_Father: {fileID: 4952354421759189693}
+  m_Father: {fileID: 5356814532872686890}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -977,8 +978,8 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 6747903134643665939}
     m_SelectOnDown: {fileID: 8706875170188769388}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 6747903134643665939}
+    m_SelectOnRight: {fileID: 8706875170188769388}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1353,8 +1354,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -125}
-  m_SizeDelta: {x: 180, y: 30}
+  m_AnchoredPosition: {x: 150, y: -106.25}
+  m_SizeDelta: {x: 180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2945031346091805153
 CanvasRenderer:
@@ -1411,8 +1412,8 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 1525450818666574571}
     m_SelectOnDown: {fileID: 7602863083512460457}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 1525450818666574571}
+    m_SelectOnRight: {fileID: 7602863083512460457}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1669,8 +1670,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -265}
-  m_SizeDelta: {x: 180, y: 30}
+  m_AnchoredPosition: {x: 150, y: -261.25}
+  m_SizeDelta: {x: 180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2483050554972000281
 CanvasRenderer:
@@ -1727,8 +1728,8 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 7602863083512460457}
     m_SelectOnDown: {fileID: 1525450818666574571}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 7602863083512460457}
+    m_SelectOnRight: {fileID: 1525450818666574571}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1798,7 +1799,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5356814532872686890}
-  - {fileID: 1288426676127164076}
   m_Father: {fileID: 2275925618704647497}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1857,6 +1857,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FirstSelected: {fileID: 1525450818666574571}
+  isGroupSelect: 0
+  OnGroupSelect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &8848765399972761858
 PrefabInstance:
   m_ObjectHideFlags: 0

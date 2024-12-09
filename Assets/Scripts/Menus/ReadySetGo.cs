@@ -1,3 +1,4 @@
+using ShareDevice;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,10 @@ public class ReadySetGo : MonoBehaviour
     [Tooltip("If false, players can't move their claws while the sequence is playing.")]
     [SerializeField]
     private bool IsClawControllableDuringSequence = false;
+
+    [Tooltip("If true, the claw is respawned as it becomes controllable.")]
+    [SerializeField]
+    private bool IsRespawningClaw = false;
 
     [SerializeField]
     private UnityEngine.Events.UnityEvent OnSequenceCompleted;
@@ -48,6 +53,10 @@ public class ReadySetGo : MonoBehaviour
         foreach (var claw in claws)
         {
             claw.SetActive(isControllable);
+            if (isControllable && IsRespawningClaw) // reset position of players prefab
+            {
+                claw.GetComponentInParent<PlayerInputRespawn>()?.DoRespawn();
+            }
         }
     }
 
