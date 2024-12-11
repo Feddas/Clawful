@@ -213,11 +213,18 @@ namespace ShareDevice
             var deviceLayoutName = default(string);
             var controlPath = default(string);
 
-            // Get display string from action.
-            var action = UseBindingAssetNotPlayerIndex
-                ? actionReference?.action
-                : PlayerInput.all[m_PlayerIndex].actions[actionReference.name];
+            // Get action
+            InputAction action;
+            if (UseBindingAssetNotPlayerIndex || PlayerInput.all.Count <= m_PlayerIndex)
+            {
+                action = actionReference?.action;
+            }
+            else
+            {
+                action = PlayerInput.all[m_PlayerIndex].actions[actionReference.name];
+            }
 
+            // Get display string from action.
             if (action != null)
             {
                 var bindingIndex = action.bindings.IndexOf(x => x.id.ToString() == m_BindingId);

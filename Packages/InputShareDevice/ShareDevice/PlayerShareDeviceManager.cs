@@ -86,7 +86,7 @@ namespace ShareDevice
 
             InputSystem.onActionChange += OnBindingChange;
 
-            LockedSelections.Instance.PlayerCount = spawnPositionsAvailable.Length;
+            LoadExistingPlayers();
         }
 
         private void OnDestroy()
@@ -165,19 +165,7 @@ namespace ShareDevice
             }
 
             // determine index of first available spawn position
-            var spawnPosition = spawnPositionsAvailable
-                .Select((value, index) => new TransformAtIndex(index, value))
-                .Where(pair => pair.Transform != null)
-                .FirstOrDefault();
-            spawnPositionsAvailable[spawnPosition.Index] = null;
-
-            // disable listening for a new player on the same control scheme
-            availableSchemes.Remove(thatPressed);
-            if (atMaxPlayers())
-            {
-                // there are no players left to join, unsubscribe to anyKey events
-                eventListener.Dispose();
-            }
+            var spawnPosition = trackPlayer(thatPressed);
 
             // setup player
             playerInput.gameObject.name = "Player" + playerInput.playerIndex + playerInput.currentControlScheme;
@@ -227,6 +215,38 @@ namespace ShareDevice
                     Debug.Log("InputSystem_onActionChange.BoundControlsChanged now using " + newControl.Key + " instead of " + oldControl.Key);
                 }
             }
+        }
+
+        /// <summary> Account for already existing players. i.e. players with DontDestroyOnLoad active </summary>
+        private void LoadExistingPlayers()
+        {
+            var existingPlayers = GameObject.FindObjectsByType<PlayerInput>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(p => p.GetComponent<PlayerInputRespawn>() != null); // Assume PlayerInputRespawn means player was created by this manager
+
+            foreach (var player in existingPlayers)
+            {
+                trackPlayer(player.actions[actionToJoin.name].controls[0]);
+            }
+        }
+
+        /// <returns> preferred spawn location </returns>
+        private TransformAtIndex trackPlayer(InputControl playerControl)
+        {
+            // determine index of first available spawn position
+            var spawnPosition = spawnPositionsAvailable
+                .Select((value, index) => new TransformAtIndex(index, value))
+                .Where(pair => pair.Transform != null)
+                .FirstOrDefault();
+            spawnPositionsAvailable[spawnPosition.Index] = null;
+
+            // disable listening for a new player on the same control scheme
+            availableSchemes.Remove(playerControl);
+            if (atMaxPlayers())
+            {
+                // there are no players left to join, unsubscribe to anyKey events
+                eventListener.Dispose();
+            }
+            return spawnPosition;
         }
 
         // commented out code below saved incase buildControlSchemePairs()'s `actionToJoin.action.controls` Needs to be replaced with `FindSourceActionMap(actionToJoin).controls`

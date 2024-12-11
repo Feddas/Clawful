@@ -218,7 +218,7 @@ namespace ShareDevice
             OnSelectionChanged?.Invoke(cursorLocked);
 
             // update the groups selection. check if this cursorLock changes everyone in the group being locked (AKA all ready).
-            LockedSelections.Instance.OnPlayerLockChanged(cursorLocked);
+            UiSelectedOnEnable.ActiveInstance.OnPlayerLockChanged(cursorLocked);
         }
 
         /// <summary> When OnNavigate is called EventSystem.CurrentSelectedGameObject hasn't been updated yet. After a frame, it will be updated. </summary>

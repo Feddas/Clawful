@@ -33,26 +33,22 @@ namespace ShareDevice
         }
 
         /// <summary> If true, wait for all active eventsystems to lock a selection. If false, first eventsytem that selects a submission activates it for everyone. </summary>
-        public bool IsGroupSelect { get { return isGroupSelect; } }
+        public bool IsGroupSelect { get { return groupSelection.IsGroupSelect; } }
 
         [Tooltip("UI element to have focus when this gameobject is activated. Also tells the UI nav system where to start from.")]
         [SerializeField]
         private Selectable FirstSelected;
 
-        [Tooltip("If true, wait for all active eventsystems to lock a selection. If false, first eventsytem that selects a submission activates it for everyone.")]
+        [Tooltip("Decisions around all players having to lock in a selection.")]
         [SerializeField]
-        private bool isGroupSelect;
+        private LockedSelections groupSelection;
 
-        [Tooltip("Raised when all players have locked in a selection. payload is true when group selection is locked. payload is false when group selection is broken.")]
-        [SerializeField]
-        private UnityEngine.Events.UnityEvent<bool> OnGroupSelect;
-
-        /// <summary> Invoke this when all active eventsystems have a selection newly locked or broken. </summary>
-        /// <param name="isLocked"> true when group selection is locked. false when group selection is broken. </param>
-        public void InvokeGroupSelect(bool isLocked)
+        /// <summary> Determines if all players in the group have locked their selection.
+        /// Subscribes to an individual player locking their selection.  </summary>
+        /// <returns> if all players are locked </returns>
+        public bool OnPlayerLockChanged(bool isLocked)
         {
-            // Debug.Log($"{Time.frameCount} {(isLocked ? "everyone locked" : "lock broken")}. count {ShareDevice.LockedSelections.Instance.LockCount}.");
-            OnGroupSelect.Invoke(isLocked);
+            return groupSelection.OnPlayerLockChanged(isLocked);
         }
 
         public GameObject GetFirstSelected()
