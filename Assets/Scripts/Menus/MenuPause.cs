@@ -56,6 +56,8 @@ public class MenuPause : MonoBehaviour
         TogglePause.performed -= TogglePause_performed;
         TogglePause.Disable();
 
+        PauseActive(false); // ensure timescale doesn't remain 0
+
         breadcrumbs.CloseAll();
     }
 
