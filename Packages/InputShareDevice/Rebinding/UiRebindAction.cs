@@ -20,7 +20,7 @@ namespace ShareDevice
         /// <summary>
         /// Reference to the action that is to be rebound.
         /// </summary>
-        public InputActionReference actionReference
+        private InputActionReference actionReference
         {
             get => m_Action;
             set
@@ -28,6 +28,14 @@ namespace ShareDevice
                 m_Action = value;
                 UpdateActionLabel();
                 UpdateBindingDisplay();
+            }
+        }
+
+        public int PlayerIndex
+        {
+            get
+            {
+                return m_PlayerIndex;
             }
         }
 
@@ -184,7 +192,7 @@ namespace ShareDevice
         {
             bindingIndex = -1;
 
-            action = m_Action?.action;
+            action = GetAction();
             if (action == null)
                 return false;
 
@@ -214,15 +222,7 @@ namespace ShareDevice
             var controlPath = default(string);
 
             // Get action
-            InputAction action;
-            if (UseBindingAssetNotPlayerIndex || PlayerInput.all.Count <= m_PlayerIndex)
-            {
-                action = actionReference?.action;
-            }
-            else
-            {
-                action = PlayerInput.all[m_PlayerIndex].actions[actionReference.name];
-            }
+            InputAction action = GetAction();
 
             // Get display string from action.
             if (action != null)
@@ -245,6 +245,25 @@ namespace ShareDevice
 
             // Give listeners a chance to configure UI in response.
             m_UpdateBindingUIEvent?.Invoke(this, displayString, deviceLayoutName, controlPath);
+        }
+
+        /// <returns> Action being rebound based on if <seealso cref="UseBindingAssetNotPlayerIndex"/> is set </returns>
+        public InputAction GetAction()
+        {
+            return GetAction(actionReference);
+        }
+
+        /// <param name="mapToAction"> Action this will be mapped or copied into </param>
+        public InputAction GetAction(InputActionReference mapToAction)
+        {
+            if (UseBindingAssetNotPlayerIndex || PlayerInput.all.Count <= PlayerIndex)
+            {
+                return mapToAction?.action;
+            }
+            else
+            {
+                return PlayerInput.all[PlayerIndex].actions[mapToAction.name];
+            }
         }
 
         /// <summary>
@@ -598,7 +617,7 @@ namespace ShareDevice
         {
             if (m_ActionLabel != null)
             {
-                var action = m_Action?.action;
+                var action = GetAction();
                 m_ActionLabel.text = action != null ? action.name : string.Empty;
             }
         }

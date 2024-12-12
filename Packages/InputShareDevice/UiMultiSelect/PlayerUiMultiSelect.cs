@@ -54,7 +54,7 @@ namespace ShareDevice
             new Vector2(1, 1),
             new Vector2(0, 1) };
 
-        private PlayerInput playerInput
+        public PlayerInput PlayerInput
         {
             get
             {
@@ -91,7 +91,7 @@ namespace ShareDevice
             Cursor.sprite = Hover;
             Cursor.color = Random.ColorHSV(0, 1, 1, 1, .8f, .8f);
             var cursorRect = Cursor.GetComponent<RectTransform>();
-            cursorRect.pivot = cursorPivot[playerInput.playerIndex];
+            cursorRect.pivot = cursorPivot[PlayerInput.playerIndex];
 
             // If UiSelectedOnEnable has ActiveInstance show cursor
             ShowCursor();
@@ -104,7 +104,7 @@ namespace ShareDevice
 
         public void OnEnable()
         {
-            playerId ??= playerInput.devices[0].name + ":" + playerInput.currentControlScheme;
+            playerId ??= PlayerInput.devices[0].name + ":" + PlayerInput.currentControlScheme;
             Players.Manage.Add(playerId, this);
         }
 
@@ -116,7 +116,7 @@ namespace ShareDevice
         /// <summary> Sets whether or not this player can perform an action to leave the game. </summary>
         public void SetCanLeaveGame(bool canLeave, InputActionReference mapToLeave)
         {
-            var actionToLeave = playerInput.actions[mapToLeave.name];
+            var actionToLeave = PlayerInput.actions[mapToLeave.name];
             if (canLeave)
             {
                 actionToLeave.Enable();

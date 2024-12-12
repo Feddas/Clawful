@@ -220,12 +220,13 @@ namespace ShareDevice
         /// <summary> Account for already existing players. i.e. players with DontDestroyOnLoad active </summary>
         private void LoadExistingPlayers()
         {
-            var existingPlayers = GameObject.FindObjectsByType<PlayerInput>(FindObjectsInactive.Include, FindObjectsSortMode.None)
-                .Where(p => p.GetComponent<PlayerInputRespawn>() != null); // Assume PlayerInputRespawn means player was created by this manager
-
-            foreach (var player in existingPlayers)
+            foreach (PlayerUiMultiSelect player in Players.Manage.UiMultiSelectors)
             {
-                trackPlayer(player.actions[actionToJoin.name].controls[0]);
+                var newSpawn = trackPlayer(player.PlayerInput.actions[actionToJoin.name].controls[0]);
+                player.SetCanLeaveGame(true, actionToLeave);
+
+                // assume old spawn position gameobject was destroyed. Overwrite with spawnPositionsAvailable result.
+                player.GetComponent<PlayerInputRespawn>().SetPosition(newSpawn);
             }
         }
 

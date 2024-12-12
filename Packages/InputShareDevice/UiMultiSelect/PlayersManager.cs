@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 namespace ShareDevice
 {
@@ -22,6 +23,11 @@ namespace ShareDevice
         public IEnumerable<PlayerUiMultiSelect> UiMultiSelectors
         {
             get { return Active.Values; }
+        }
+
+        public IEnumerable<PlayerInput> PlayerInputs
+        {
+            get { return Active.Values.Select(p => p.PlayerInput); }
         }
 
         public IEnumerable<UnityEngine.InputSystem.UI.MultiplayerEventSystem> EventSystems
