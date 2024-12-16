@@ -106,7 +106,7 @@ public class BlobBall : MonoBehaviour
 
         this.FloorSensor.FallsUntil -= 1;
 
-        Debug.Log($"{this.name} at {this.transform.position} is falling to {this.FloorSensor.FallsUntil.ToString("F1")} due to ball removed at {position}");
+        // Debug.Log($"{this.name} at {this.transform.position} is falling to {this.FloorSensor.FallsUntil.ToString("F1")} due to ball removed at {position}");
         this.FloorSensor.SetNoFloor(this);
     }
 }

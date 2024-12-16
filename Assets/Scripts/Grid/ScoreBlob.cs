@@ -58,7 +58,7 @@ public class ScoreBlob
         // report score
         if (total > 0 && OnScored != null)
         {
-            Debug.Log(tilemap.name + " SCORED " + total + " from " + position);
+            // Debug.Log(tilemap.name + " SCORED " + total + " from " + position);
             OnScored.Invoke(total);
         }
         return total;

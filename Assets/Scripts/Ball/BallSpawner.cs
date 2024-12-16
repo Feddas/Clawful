@@ -4,6 +4,9 @@ using UnityEngine;
 /// <summary> Spawns Balls at random locations in a region matching the size of BallSpawners' transform. </summary>
 public class BallSpawner : MonoBehaviour
 {
+    /// <summary> What frame the last ball was spawned </summary>
+    private static int LastFrameSpawned;
+
     [Tooltip("How many seconds until the next spawn.")]
     [SerializeField]
     private float SecondsBetweenSpawn = 0.1f;
@@ -15,6 +18,10 @@ public class BallSpawner : MonoBehaviour
     [Tooltip("Spawner stops spawning until there are fewer than this many.")]
     [SerializeField]
     private int MaxObjects = 30;
+
+    [Tooltip("What happens when there are no more scorable moves")]
+    [SerializeField]
+    private UnityEngine.Events.UnityEvent OnNoMovesAvailable;
 
     [Header("Balls")]
     [SerializeField]
@@ -39,14 +46,23 @@ public class BallSpawner : MonoBehaviour
         float nextPrefab;
         Vector3 spawnPoint;
 
+        // maintain ball count
         while (true)
         {
-            yield return new WaitUntil(() => SpawnParent.childCount < MaxObjects);
+            // time of the next spawn
             yield return new WaitForSeconds(SecondsBetweenSpawn);
+            yield return new WaitUntil(() => SpawnParent.childCount < MaxObjects);
+            while (LastFrameSpawned == Time.frameCount) // only one spawner can spawn a ball each frame. Doing so makes SpawnParent.childCount accurate.
+            {
+                yield return null;
+            }
+            LastFrameSpawned = Time.frameCount;
 
+            // determine what to spawn
             spawnPoint = transform.TransformPoint(new Vector3(Random.Range(-.5f, .5f), Random.Range(-.5f, .5f), 0));
             nextPrefab = Random.value;
 
+            // spawn it
             if (nextPrefab < PercentBombs)
             {
                 Instantiate(BombBallPrefab, spawnPoint, Quaternion.identity, SpawnParent);
@@ -59,6 +75,20 @@ public class BallSpawner : MonoBehaviour
                 nextBall.name = $"ball{nextBall.Color.b}-{spawnPoint.x:F1}-{nextBall.PointValue}"; // ball color - ball column - ball value
                 nextBall.OnValidate();
             }
+
+            // check spawn is playable
+            yield return CheckGameOver();
+        }
+    }
+
+    private IEnumerator CheckGameOver()
+    {
+        yield return null; // wait for last ball to complete spawning
+
+        if (SpawnParent.childCount == MaxObjects                        // no more balls will be instantiated
+            && SpawnParent.GetComponentInChildren<BombBall>() == null)  // no more purple BombBalls exist.
+        {
+            OnNoMovesAvailable.Invoke(); // activates "VictoryPanel" on pause screen. it displays "Player Wins! [New Game]"
         }
     }
 
