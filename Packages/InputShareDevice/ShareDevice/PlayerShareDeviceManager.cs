@@ -57,11 +57,15 @@ namespace ShareDevice
         private IDisposable eventListener;
 
         /// <summary> Initial, full list, of all controls. Key is a button path, Value is scheme that button is paired with.
-        /// <see cref="availableSchemes"/> is needed because PlayerInput.Instantiate(PlayerPrefab...) causes <see cref="actionToJoin"/> to be paired to a single control on a device. Collapsing all previous controls it had to only the matching control.</summary>
-        Dictionary<InputControl, string> availableSchemes;
+        /// <see cref="availableSchemes"/> & <see cref="intialSchemes"/> are needed because PlayerInput.Instantiate(PlayerPrefab...) causes <see cref="actionToJoin"/> to be paired to a single control on a device. Collapsing all previous controls it had to only the matching control.</summary>
+        private Dictionary<InputControl, string> availableSchemes;
+        private Dictionary<InputControl, string> intialSchemes = new Dictionary<InputControl, string>();
+
+        /// <summary> <bindingId, effectiveButtonPath> Cache of every actionToJoin button's effective path. Used to determine if rebinding occurred. </summary>
+        private Dictionary<Guid, string> currentBindingPaths;
 
         /// <summary> Subscribes to UnityEvent PlayerInputManager.NotifyPlayerLeft </summary>
-        UnityAction<PlayerInput> actionPlayerLeft;
+        private UnityAction<PlayerInput> actionPlayerLeft;
 
         private void Start()
         {
@@ -97,8 +101,13 @@ namespace ShareDevice
 
         private void OnEnable()
         {
+            currentBindingPaths = actionToJoin.action.bindings.ToDictionary(b => b.id, b => b.effectivePath);
+
             // cache the intial, full list, of all controls.
-            availableSchemes = buildControlSchemePairs();
+            intialSchemes = buildControlSchemePairs();
+
+            // shallow copy for modifying
+            availableSchemes = intialSchemes.ToDictionary(d => d.Key, d => d.Value);
 
             // listen for any button press https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/api/UnityEngine.InputSystem.InputSystem.html#UnityEngine_InputSystem_InputSystem_onAnyButtonPress
             eventListener = InputSystem.onAnyButtonPress.Call(OnAnyButtonPressed);
@@ -197,22 +206,37 @@ namespace ShareDevice
 
             if (referencedAction.actionMap?.asset == actionAsset)
             {
-                // Ignore rebind raised for a PlayerInput copy of the actionAsset. It's a PlayerInput when it's paired to a binding and a device.
-                if (actionAsset.bindingMask != null || actionAsset.devices != null)
-                {
-                    return;
-                }
-                // else this must have been raised for the root actionAsset.
+                updateRebindDependencies(referencedAction);
+            }
+        }
 
-                // replace the first element where the scheme is the same but the control is different.
-                var newSchemes = buildControlSchemePairs();
-                var oldControl = availableSchemes.Except(newSchemes).FirstOrDefault();
-                if (oldControl.Value != null)
+        /// <summary> If a rebind occurred, <seealso cref="availableSchemes"/> needs to be updated.</summary>
+        private void updateRebindDependencies(InputAction referencedAction)
+        {
+            // check if rebind occurred
+            bool isRebindDetected = referencedAction.bindings.Any(b => currentBindingPaths[b.id] != b.effectivePath);
+            if (false == isRebindDetected)
+            {
+                return;
+            }
+
+            // update availableSchemes
+            foreach (InputBinding bind in referencedAction.bindings)
+            {
+                if (currentBindingPaths[bind.id] != bind.effectivePath)
                 {
-                    var newControl = newSchemes.Where(d => d.Value == oldControl.Value).FirstOrDefault();
-                    availableSchemes.Remove(oldControl.Key);
-                    availableSchemes.Add(newControl.Key, newControl.Value);
-                    Debug.Log("InputSystem_onActionChange.BoundControlsChanged now using " + newControl.Key + " instead of " + oldControl.Key);
+                    Debug.Log($"{Time.frameCount} Rebinding {currentBindingPaths[bind.id]} changed to {bind.effectivePath}");
+
+                    // remove the old
+                    var oldControl = intialSchemes.Where(d => d.Value == bind.groups).FirstOrDefault().Key;
+                    availableSchemes.Remove(oldControl);
+
+                    // add the new
+                    var referencedDevice = referencedAction.actionMap.actions[0].controls[0].device;
+                    var controlButtonPath = bind.effectivePath.Split('/').Last();
+                    var newControl = referencedDevice.GetChildControl(controlButtonPath);
+                    availableSchemes.Add(newControl, bind.groups);
+                    currentBindingPaths[bind.id] = bind.effectivePath;
                 }
             }
         }
