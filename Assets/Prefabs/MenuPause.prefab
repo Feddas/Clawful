@@ -1598,7 +1598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Scene:
-    m_SceneAsset: {fileID: 102900000, guid: 8fac1db2757ca80408e9fe83da25329f, type: 3}
+    m_SceneAsset: {fileID: 102900000, guid: 952e4cc1a83485f4599f4b5eb6ebd6c7, type: 3}
     m_SceneName: StartMenu
 --- !u!1 &4852760368784266437
 GameObject:

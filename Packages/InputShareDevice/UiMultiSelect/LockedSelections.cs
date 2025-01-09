@@ -56,6 +56,11 @@ namespace ShareDevice
             return wasLocked;
         }
 
+        public void ResetLockCount()
+        {
+            LockCount = 0;
+        }
+
         /// <summary> Invoke this when all active eventsystems have a selection newly locked or broken. </summary>
         /// <param name="isLocked"> true when group selection is locked. false when group selection is broken. </param>
         public void InvokeGroupSelect(bool isLocked)

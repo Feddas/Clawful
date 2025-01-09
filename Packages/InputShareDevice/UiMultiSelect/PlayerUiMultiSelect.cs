@@ -200,16 +200,21 @@ namespace ShareDevice
 
             ShowCursor(); // incase submit action left the cursor on a previous UI panel
 
-            if (false == groupSelectBeforeSubmit // Not in "IsGroupSelect" mode. don't toggle anything
+            if (false == groupSelectBeforeSubmit // Previous panel was not in "IsGroupSelect" mode. Don't start new panel toggled to lock.
                 || cursorClone == null)  // in invalid state. likely no UiSelectedOnEnable.ActiveInstance
             {
                 yield break; // not in "IsGroupSelect" mode
             }
 
-            // In "IsGroupSelect" mode
-            SetCursorLock(UiInput.move != null); // use UiInput.move to determine what state to toggle into
-
-            NotifyLockChanged();
+            if (false == UiSelectedOnEnable.ActiveInstance.IsGroupSelect) // Current panel not in "IsGroupSelect" mode.
+            {
+                Players.Manage.OnUiPanelOpened(isGroupSelect: false);
+            }
+            else // In "IsGroupSelect" mode
+            {
+                SetCursorLock(UiInput.move != null); // use UiInput.move to determine what state to toggle into
+                NotifyLockChanged();
+            }
         }
 
         private void NotifyLockChanged()

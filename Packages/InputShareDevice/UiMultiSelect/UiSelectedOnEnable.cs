@@ -66,6 +66,7 @@ namespace ShareDevice
 
         private void OnDisable()
         {
+            groupSelection.ResetLockCount(); // otherwise bad values when this panel is re-enabled
             Players.Manage.OnUiPanelClosed();
         }
 
