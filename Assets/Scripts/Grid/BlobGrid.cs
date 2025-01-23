@@ -1,3 +1,4 @@
+using SoArchitecture;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -14,8 +15,9 @@ public class BlobGrid : MonoBehaviour
     /// <summary> Balls can't be activated when above this height </summary>
     private const int gridHeight = 8;
 
+    [Tooltip("Event to raise that will contain a payload of the score of this grid.")]
     [SerializeField]
-    private TextMeshProUGUI ScoreText;
+    private GameEventInt OnScoreChanged;
 
     [Tooltip("tilemap aligned to the same transform as the blobtiles tilemap. overlays are used to add text over tiles in thie tilemap.")]
     [SerializeField]
@@ -83,6 +85,7 @@ public class BlobGrid : MonoBehaviour
         scoreBlob = new ScoreBlob(_tilemap);
         scoreBlob.OnRequestDestroyCell += DestroyCell;
         scoreBlob.OnScored += AddScore;
+        AddScore(0); // Raise event to ensure all listeners set score to initial CurrentScore (Sets visible Score text to 0)
         cellCornerToCenter = (Vector2)(tilemap.layoutGrid.cellSize / 2);
     }
 
@@ -95,7 +98,7 @@ public class BlobGrid : MonoBehaviour
     private void AddScore(int scoreDelta)
     {
         CurrentScore += scoreDelta;
-        ScoreText.text = CurrentScore.ToString();
+        OnScoreChanged.Raise(CurrentScore);
     }
 
     /// <summary> All cells are finished being destroyed from a bombball. notifiy the other cells it's time to fall down. </summary>

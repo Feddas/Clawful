@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "b2d737f5facda7400af7db75ff7fbe9e05b4d442"
     },
+    "com.feddas.soarchitecture": {
+      "version": "https://github.com/Feddas/SoArchitecture.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "34cea11cd8a9961b6cd1943b77ec8b0ff4bd9b79"
+    },
     "com.unity.2d.animation": {
       "version": "9.1.0",
       "depth": 1,
