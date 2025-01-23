@@ -591,7 +591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5093240989682870478, guid: e535d3b0c7e77f14784db2023d3edadd, type: 3}
       propertyPath: m_Name
-      value: MenuPause
+      value: CanvasGameModals
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

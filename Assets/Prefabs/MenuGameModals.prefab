@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2073651166926576256}
   - component: {fileID: 5875127695469677881}
   m_Layer: 0
-  m_Name: Victory
+  m_Name: VictoryText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,13 +30,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5606267930493391456}
+  m_Father: {fileID: 154961598859270208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -33.75}
-  m_SizeDelta: {x: 180, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -20}
+  m_SizeDelta: {x: -40, y: -20}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2073651166926576256
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1629,13 +1629,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7425239780793265796}
   - {fileID: 7402492402516772917}
   - {fileID: 4836742510838118443}
   m_Father: {fileID: 154961598859270208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1813,7 +1812,7 @@ GameObject:
   - component: {fileID: 9125603813294682990}
   - component: {fileID: 8340357960360477624}
   m_Layer: 0
-  m_Name: MenuPause
+  m_Name: MenuGameModals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2627,6 +2626,7 @@ GameObject:
   - component: {fileID: 8316799064053578399}
   - component: {fileID: 1107909634910345989}
   - component: {fileID: 4824715179970804775}
+  - component: {fileID: 8237991248865523599}
   m_Layer: 0
   m_Name: VictoryPanel
   m_TagString: Untagged
@@ -2646,6 +2646,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7425239780793265796}
   - {fileID: 5606267930493391456}
   m_Father: {fileID: 2275925618704647497}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2711,6 +2712,22 @@ MonoBehaviour:
     OnGroupSelect:
       m_PersistentCalls:
         m_Calls: []
+--- !u!114 &8237991248865523599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8478436554173024138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd0bc2aba8918ef43817f374f9e1ded1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VictoryText: {fileID: 5875127695469677881}
+  AvailableScores:
+  - {fileID: 11400000, guid: edb52bd266cf35b43ab01e7cc02cb4f0, type: 2}
+  - {fileID: 11400000, guid: 9e189c62281ed364fa40d6babcc011cc, type: 2}
 --- !u!1001 &8848765399972761858
 PrefabInstance:
   m_ObjectHideFlags: 0
